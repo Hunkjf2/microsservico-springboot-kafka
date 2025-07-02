@@ -1,5 +1,6 @@
 package com.example.pessoa.config.kafka;
 
+import static com.example.pessoa.constants.serasa.TopicSerasa.*;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -56,7 +57,7 @@ public class KafkaConfig {
 
     @Bean
     public ConcurrentMessageListenerContainer<String, String> replyContainer(ConsumerFactory<String, String> consumerFactory) {
-        ContainerProperties containerProperties = new ContainerProperties("consultar-serasa-response");
+        ContainerProperties containerProperties = new ContainerProperties(TOPIC_CONSULTAR_SERASA_RESPONSE);
         return new ConcurrentMessageListenerContainer<>(consumerFactory, containerProperties);
     }
 

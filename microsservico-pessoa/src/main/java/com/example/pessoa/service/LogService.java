@@ -13,7 +13,7 @@ public class LogService {
 
     private final KafkaProducerFactory producerFactory;
 
-    // Comunicação assíncrona
+    // Para comunicação assíncrona
     public void enviarDadosLog(PessoaDto pessoaDto, String operacao) {
         LogEvent logEvent = informacaoLog(pessoaDto, operacao);
         producerFactory.criarPessoaProducer().enviarMenssagem(
@@ -21,6 +21,8 @@ public class LogService {
         );
     }
 
+
+    // Para comunicação sincrona
     public <T> T enviarDadosSincrono(String topic, String replyTopic, Object dados, Class<T> responseType) {
         return producerFactory.criarProducerSincrono()
                 .enviarMensagemSincrona(topic, replyTopic, dados, responseType);

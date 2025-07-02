@@ -8,11 +8,14 @@ import com.example.pessoa.mapper.PessoaMapper;
 import com.example.pessoa.model.Pessoa;
 import com.example.pessoa.repository.PessoaRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import static com.example.pessoa.constants.global.MenssagemSistema.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
@@ -28,27 +31,40 @@ public class PessoaService {
         return pessoaRepository.save(pessoa);
     }
 
+    @Transactional
     public Pessoa cadastrar(PessoaDto pessoaDto) {
-        Pessoa pessoa = this.salvar(pessoaMapper.toEntity(pessoaDto));
-
-        // Consulta síncrona ao Serasa
         Boolean negativado = consultarSituacaoFinanceira(pessoaDto);
+
+        Pessoa pessoa = pessoaMapper.toEntity(pessoaDto);
         pessoa.setNegativado(negativado);
 
-        logService.enviarDadosLog(pessoaMapper.toDto(pessoa), CADASTRO);
-        return pessoa;
+        Pessoa pessoaSalva = salvar(pessoa);
+        enviarLog(pessoaSalva);
+
+        return pessoaSalva;
+    }
+
+    private void enviarLog(Pessoa pessoa) {
+        logService.enviarDadosLog(pessoaMapper.toDto(
+                pessoa
+        ), CADASTRO);
     }
 
     private Boolean consultarSituacaoFinanceira(PessoaDto pessoaDto) {
-        Boolean negativado = logService.enviarDadosSincrono(
-                TOPIC_CONSULTAR_SERASA_REQUEST,
-                TOPIC_CONSULTAR_SERASA_RESPONSE,
-                pessoaDto.cpf(),
-                Boolean.class
-        );
-        return negativado;
+        try {
+            return logService.enviarDadosSincrono(
+                    TOPIC_CONSULTAR_SERASA_REQUEST,
+                    TOPIC_CONSULTAR_SERASA_RESPONSE,
+                    pessoaDto.cpf(),
+                    Boolean.class
+            );
+        } catch (Exception e){
+            log.error("Erro ao consultar situacao financeira", e);
+            return null;
+        }
     }
 
+    @Transactional
     public Pessoa editar(Long id, PessoaDto pessoaDto) {
         Pessoa pessoa = this.consultar(id);
         Pessoa pessoaAtualizada = this.salvar(atualizaDados(pessoaDto, pessoa));
@@ -62,6 +78,7 @@ public class PessoaService {
         return pessoa;
     }
 
+    @Transactional
     public void deletarPessoa(Long id) {
         Pessoa pessoa = this.consultar(id);
         PessoaDto pessoaDto = pessoaMapper.toDto(pessoa);
