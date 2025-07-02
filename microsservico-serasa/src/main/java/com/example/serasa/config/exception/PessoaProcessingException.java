@@ -1,4 +1,4 @@
-package com.example.pessoa.config.exception;
+package com.example.serasa.config.exception;
 
 public class PessoaProcessingException extends RuntimeException {
     public PessoaProcessingException(String message, Throwable cause) {

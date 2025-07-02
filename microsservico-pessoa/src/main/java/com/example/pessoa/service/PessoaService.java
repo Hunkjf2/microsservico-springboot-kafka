@@ -1,6 +1,7 @@
 package com.example.pessoa.service;
 
 import static com.example.pessoa.constants.log.Operacao.*;
+import static com.example.pessoa.constants.serasa.TopicSerasa.*;
 import com.example.pessoa.dto.PessoaDto;
 import com.example.pessoa.config.exception.PessoaNaoEncontradaException;
 import com.example.pessoa.mapper.PessoaMapper;
@@ -29,8 +30,23 @@ public class PessoaService {
 
     public Pessoa cadastrar(PessoaDto pessoaDto) {
         Pessoa pessoa = this.salvar(pessoaMapper.toEntity(pessoaDto));
+
+        // Consulta síncrona ao Serasa
+        Boolean negativado = consultarSituacaoFinanceira(pessoaDto);
+        pessoa.setNegativado(negativado);
+
         logService.enviarDadosLog(pessoaMapper.toDto(pessoa), CADASTRO);
         return pessoa;
+    }
+
+    private Boolean consultarSituacaoFinanceira(PessoaDto pessoaDto) {
+        Boolean negativado = logService.enviarDadosSincrono(
+                TOPIC_CONSULTAR_SERASA_REQUEST,
+                TOPIC_CONSULTAR_SERASA_RESPONSE,
+                pessoaDto.cpf(),
+                Boolean.class
+        );
+        return negativado;
     }
 
     public Pessoa editar(Long id, PessoaDto pessoaDto) {

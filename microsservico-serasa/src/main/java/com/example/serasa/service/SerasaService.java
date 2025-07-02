@@ -1,16 +1,13 @@
-package com.example.pessoa.service;
+package com.example.serasa.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class SearaService {
-
-//    private final KafkaProducerFactory producerFactory;
+public class SerasaService {
 
     public boolean consultarCpfSerasa(String cpf) {
         String cpfLimpo = cpf.replaceAll("[^0-9]", "");
@@ -24,7 +21,5 @@ public class SearaService {
             "55566677788",
             "99988877766"
     );
-
-
 
 }

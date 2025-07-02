@@ -5,6 +5,11 @@ spring:
     bootstrap-servers: localhost:9092
     producer:
       retries: 3
+    consumer:
+      group-id: pessoa-reply-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/pessoa_db?currentSchema=pessoa_db
@@ -23,6 +28,13 @@ server:
   port: 8090
   servlet:
         context-path: /api
+
+
+# Configurações específicas para ReplyingKafkaTemplate
+kafka:
+  reply:
+    topic: consultar-serasa-response
+    timeout: 10000
 
 logging:
   level:

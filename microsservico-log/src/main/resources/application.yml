@@ -22,13 +22,11 @@ spring:
       group-id: log-service-group  # Grupo do consumer
 
 server:
-  port: 8070
+  port: 8060
 
 logging:
   level:
-    com.sistema.autor: DEBUG  # Log detalhado para o pacote da aplicação
-    org.apache.kafka: INFO  # Log informativo para Kafka
-    org.hibernate.orm.connections.pooling: ERROR
+    org.apache.kafka: INFO
     org.springframework.kafka: DEBUG  # Log detalhado para Spring Kafka
+    org.hibernate.orm.connections.pooling: ERROR
     org.hibernate.SQL: DEBUG  # Log das queries SQL
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # Log dos parâmetros das queries

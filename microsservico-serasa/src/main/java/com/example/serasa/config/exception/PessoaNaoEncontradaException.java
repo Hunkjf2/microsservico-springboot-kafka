@@ -1,4 +1,4 @@
-package com.example.pessoa.config.exception;
+package com.example.serasa.config.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,6 +1,6 @@
-package com.example.pessoa.config.exception;
+package com.example.serasa.config.exception;
 
-import com.example.pessoa.dto.ErrorResponse;
+import com.example.serasa.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

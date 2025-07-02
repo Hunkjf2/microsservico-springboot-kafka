@@ -5,6 +5,9 @@ spring:
     bootstrap-servers: localhost:9092
     producer:
       retries: 3
+    consumer:
+      group-id: serasa-group
+      auto-offset-reset: earliest
 
 server:
   port: 8070
@@ -12,5 +15,4 @@ server:
 logging:
   level:
     org.hibernate.SQL: DEBUG
-    org.hibernate.orm.connections.pooling: ERROR
     org.apache.kafka: INFO

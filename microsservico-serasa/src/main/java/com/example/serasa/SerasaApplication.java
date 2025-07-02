@@ -1,13 +1,13 @@
-package com.example.pessoa;
+package com.example.serasa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PessoaApplication {
+public class SerasaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PessoaApplication.class, args);
+		SpringApplication.run(SerasaApplication.class, args);
 	}
 
 }

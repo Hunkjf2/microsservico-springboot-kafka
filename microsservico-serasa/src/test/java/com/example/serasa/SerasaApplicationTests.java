@@ -1,10 +1,10 @@
-package com.example.pessoa;
+package com.example.serasa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PessoaApplicationTests {
+class SerasaApplicationTests {
 
 	@Test
 	void contextLoads() {
