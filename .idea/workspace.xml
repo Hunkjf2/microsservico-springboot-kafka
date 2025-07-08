@@ -6,25 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b8640bb8-18f2-47e7-bdfd-adcd56bde95c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-log/src/main/java/com/example/log/config/JacksonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-log/src/main/java/com/example/log/config/JacksonConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-log/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-log/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-pessoa/src/main/java/com/example/pessoa/config/kafka/KafkaConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-pessoa/src/main/java/com/example/pessoa/config/kafka/KafkaConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-pessoa/src/main/java/com/example/pessoa/service/PessoaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-pessoa/src/main/java/com/example/pessoa/service/PessoaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-pessoa/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-pessoa/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/PessoaApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/serasa/SerasaApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/config/exception/CustomExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/serasa/config/exception/CustomExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/config/exception/PessoaNaoEncontradaException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/serasa/config/exception/PessoaNaoEncontradaException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/config/exception/PessoaProcessingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/serasa/config/exception/PessoaProcessingException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/config/kafka/KafkaConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/serasa/config/kafka/KafkaConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/config/kafka/KafkaProducerFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/config/kafka/SerasaProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/serasa/config/kafka/SerasaComsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/constants/global/MenssagemSistema.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/constants/log/TopicSerasa.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/serasa/constants/TopicSerasa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/controller/SerasaController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/dto/ErrorResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/serasa/dto/ErrorResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/pessoa/service/SearaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/java/com/example/serasa/service/SerasaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microsservico-serasa/src/test/java/com/example/pessoa/PessoaApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/microsservico-serasa/src/test/java/com/example/serasa/SerasaApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +57,7 @@
       <workItem from="1751306738142" duration="23000" />
       <workItem from="1751446529089" duration="912000" />
       <workItem from="1751447602669" duration="3732000" />
+      <workItem from="1751492669399" duration="2669000" />
     </task>
     <servers />
   </component>
