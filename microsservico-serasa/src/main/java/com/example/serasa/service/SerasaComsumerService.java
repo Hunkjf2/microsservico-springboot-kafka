@@ -1,7 +1,7 @@
-package com.example.serasa.config.kafka;
+package com.example.serasa.service;
 
 import static com.example.serasa.constants.TopicSerasa.*;
-import com.example.serasa.service.SerasaService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class SerasaComsumer {
+public class SerasaComsumerService {
 
     private final SerasaService serasaService;
 

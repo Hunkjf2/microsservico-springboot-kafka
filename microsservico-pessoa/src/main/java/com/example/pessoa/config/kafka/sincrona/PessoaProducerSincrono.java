@@ -2,6 +2,7 @@ package com.example.pessoa.config.kafka.sincrona;
 
 import com.example.pessoa.config.exception.PessoaProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
@@ -11,25 +12,23 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 
 @Component
+@RequiredArgsConstructor
 public class PessoaProducerSincrono {
 
     private final ReplyingKafkaTemplate<String, String, String> replyingKafkaTemplate;
     private final ObjectMapper objectMapper;
+    private static Integer timeout = 10;
 
-    public PessoaProducerSincrono(ReplyingKafkaTemplate<String, String, String> replyingKafkaTemplate) {
-        this.replyingKafkaTemplate = replyingKafkaTemplate;
-        this.objectMapper = new ObjectMapper();
-        this.objectMapper.findAndRegisterModules();
-    }
-
-    public <T> T enviarMensagemSincrona(String topic, String replyTopic, Object mensagem, Class<T> responseType) {
+    public <T> T enviarMensagem(String topic, String replyTopic, Object mensagem, Class<T> responseType) {
         try {
             String mensagemJson = objectMapper.writeValueAsString(mensagem);
 
-            ProducerRecord<String, String> record = new ProducerRecord<>(topic, mensagemJson);
-            record.headers().add("kafka_replyTopic", replyTopic.getBytes());
+            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, mensagemJson);
+            producerRecord.headers().add("kafka_replyTopic", replyTopic.getBytes());
 
-            RequestReplyFuture<String, String, String> future = replyingKafkaTemplate.sendAndReceive(record, Duration.ofSeconds(10));
+            RequestReplyFuture<String, String, String> future = replyingKafkaTemplate.sendAndReceive(
+                    producerRecord, Duration.ofSeconds(timeout)
+            );
             ConsumerRecord<String, String> response = future.get();
 
             return objectMapper.readValue(response.value(), responseType);
