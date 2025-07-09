@@ -1,7 +1,7 @@
 package com.example.pessoa.config.kafka.assincrona;
 
 import com.example.pessoa.config.exception.PessoaProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.example.pessoa.utils.ConverterMenssagem.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -10,13 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PessoaProducerAssincrono {
 
-    private final KafkaTemplate<String, String> asyncKafkaTemplate;
-    private final ObjectMapper objectMapper;
+    private final KafkaTemplate<String, String> criarKafkaTemplate;
 
-    public void enviarMensagem(String topic, Object mensagem) {
+    public void enviarParaTopico(String topic, Object mensagem) {
         try {
-            String mensagemJson = objectMapper.writeValueAsString(mensagem);
-            asyncKafkaTemplate.send(topic, mensagemJson);
+            criarKafkaTemplate.send(topic, serializar(mensagem));
         } catch (Exception e) {
             throw new PessoaProcessingException("Erro ao processar mensagem assíncrona", e);
         }

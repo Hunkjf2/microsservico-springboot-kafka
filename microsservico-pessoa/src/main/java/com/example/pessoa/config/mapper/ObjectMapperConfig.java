@@ -1,4 +1,4 @@
-package com.example.pessoa.config.kafka;
+package com.example.pessoa.config.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

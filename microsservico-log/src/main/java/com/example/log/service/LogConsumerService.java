@@ -1,16 +1,14 @@
 package com.example.log.service;
 
-import static com.example.log.constants.TopicLog.*;
-
-import com.example.log.dto.LogEvent;
+import com.example.log.dto.LogEventDto;
 import com.example.log.dto.PessoaDto;
 import com.example.log.model.Log;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
+import static com.example.log.constants.TopicLog.*;
+import static com.example.log.utils.ConverterMenssagem.*;
 
 /**
  * Consumer Kafka para processar mensagens relacionadas a Autor
@@ -19,28 +17,26 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class LogKafkaConsumerService {
+public class LogConsumerService {
     
     private final LogService logService;
-    private final ObjectMapper objectMapper;
 
     @KafkaListener(
         topics = TOPIC_ENVIAR_LOG,
         groupId = "${spring.kafka.consumer.group-id}"
     )
-    public void processarEnvioLog(@Payload String mensagem) {
-        
+    public void processarEnvioLog(String mensagem) {
         try {
-            LogEvent logEvent = objectMapper.readValue(mensagem, LogEvent.class);
-            PessoaDto pessoaDto = logEvent.pessoaDto();
-            String dadosJson = objectMapper.writeValueAsString(pessoaDto);
+
+            LogEventDto logEventDto = desserializar(mensagem, LogEventDto.class);
+            PessoaDto pessoaDto = logEventDto.pessoaDto();
 
             Log log = Log.builder()
-                    .operacao(logEvent.operacao())
-                    .dados(dadosJson)
+                    .operacao(logEventDto.operacao())
+                    .dados(mensagem)
                     .dataHoraCriacao(pessoaDto.dataHoraCriacao())
-                    .nomeUsuario(logEvent.nomeUsuario())
-                    .nomeMicroSservico(logEvent.microservico())
+                    .nomeUsuario(logEventDto.nomeUsuario())
+                    .nomeMicroSservico(logEventDto.microservico())
                     .idUsuario(pessoaDto.id())
                     .build();
 

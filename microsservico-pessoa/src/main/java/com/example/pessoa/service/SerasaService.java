@@ -5,9 +5,7 @@ import com.example.pessoa.dto.PessoaDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
-
 import static com.example.pessoa.constants.serasa.TopicSerasa.*;
 
 @RequiredArgsConstructor
@@ -25,6 +23,7 @@ public class SerasaService {
                     pessoaDto.cpf(),
                     Boolean.class
             );
+            log.info("Resultado da consulta: {} ",resultado);
             return Optional.ofNullable(resultado);
         } catch (Exception e){
             log.error("Erro ao consultar situacao financeira", e);

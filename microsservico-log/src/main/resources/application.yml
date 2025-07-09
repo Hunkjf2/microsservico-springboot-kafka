@@ -20,6 +20,7 @@ spring:
     bootstrap-servers: localhost:9092  # Servidor Kafka
     consumer:
       group-id: log-service-group  # Grupo do consumer
+      auto-offset-reset: earliest
 
 server:
   port: 8060

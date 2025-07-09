@@ -1,6 +1,6 @@
 package com.example.pessoa.service;
 
-import com.example.pessoa.dto.LogEvent;
+import com.example.pessoa.dto.LogEventDto;
 import com.example.pessoa.dto.PessoaDto;
 import com.example.pessoa.config.kafka.KafkaProducerFactory;
 import com.example.pessoa.mapper.PessoaMapper;
@@ -18,14 +18,16 @@ public class LogService {
 
     public void enviarDadosLog(Pessoa pessoa, String operacao) {
         PessoaDto pessoaDto = pessoaMapper.toDto(pessoa);
-        LogEvent logEvent = informacaoLog(pessoaDto, operacao);
-        producerFactory.getAssincronoProducer().enviarMensagem(
-                TOPIC_ENVIAR_LOG, logEvent
+
+        LogEventDto logEventDto = informacaoLog(pessoaDto, operacao);
+
+        producerFactory.getAssincronoProducer().enviarParaTopico(
+                TOPIC_ENVIAR_LOG, logEventDto
         );
     }
 
-    private static LogEvent informacaoLog(PessoaDto pessoaDto, String operacao) {
-        return new LogEvent(
+    private static LogEventDto informacaoLog(PessoaDto pessoaDto, String operacao) {
+        return new LogEventDto(
                 pessoaDto, operacao, "microservico-pessoa", 1L, "Jhon Doe"
         );
     }

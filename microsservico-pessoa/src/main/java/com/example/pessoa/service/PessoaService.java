@@ -1,6 +1,5 @@
 package com.example.pessoa.service;
 
-import static com.example.pessoa.constants.log.Operacao.*;
 import com.example.pessoa.dto.PessoaDto;
 import com.example.pessoa.config.exception.PessoaNaoEncontradaException;
 import com.example.pessoa.mapper.PessoaMapper;
@@ -10,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
-
 import static com.example.pessoa.constants.global.MenssagemSistema.*;
+import static com.example.pessoa.constants.log.Operacao.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class PessoaService {
         Pessoa pessoa = pessoaMapper.toEntity(pessoaDto);
         pessoa.setNegativado(negativado.orElse(null));
         Pessoa pessoaSalva = salvar(pessoa);
-        //logService.enviarDadosLog(pessoaSalva, CADASTRO);
+        logService.enviarDadosLog(pessoaSalva, CADASTRO);
         return pessoaSalva;
     }
 

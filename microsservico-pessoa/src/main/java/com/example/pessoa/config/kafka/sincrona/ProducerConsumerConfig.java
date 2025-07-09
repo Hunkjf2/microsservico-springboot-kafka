@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
-public class KafkaSincronaConfig {
+public class ProducerConsumerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -28,10 +28,10 @@ public class KafkaSincronaConfig {
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
 
-    private final ProducerFactory<String, String> assincronoProducerFactory;
+    private final ProducerFactory<String, String> criarProducerFactory;
 
     @Bean
-    public ConsumerFactory<String, String> syncConsumerFactory() {
+    public ConsumerFactory<String, String> criarConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -42,19 +42,22 @@ public class KafkaSincronaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, String> syncProducerFactory() {
-        return assincronoProducerFactory;
+    public ProducerFactory<String, String> serasaProducerFactory() {
+        return criarProducerFactory;
     }
 
     @Bean
     public ConcurrentMessageListenerContainer<String, String> replyContainer() {
-        ContainerProperties containerProperties = new ContainerProperties(TOPIC_CONSULTAR_SERASA_RESPONSE);
-        return new ConcurrentMessageListenerContainer<>(syncConsumerFactory(), containerProperties);
+        String[] responseTopics = {
+                TOPIC_CONSULTAR_SERASA_RESPONSE
+        };
+        ContainerProperties containerProperties = new ContainerProperties(responseTopics);
+        return new ConcurrentMessageListenerContainer<>(criarConsumerFactory(), containerProperties);
     }
 
     @Bean
     public ReplyingKafkaTemplate<String, String, String> replyingKafkaTemplate() {
-        return new ReplyingKafkaTemplate<>(syncProducerFactory(), replyContainer());
+        return new ReplyingKafkaTemplate<>(serasaProducerFactory(), replyContainer());
     }
 
 }

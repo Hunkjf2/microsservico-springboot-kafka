@@ -1,6 +1,6 @@
-package com.example.pessoa.dto;
+package com.example.log.dto;
 
-public record LogEvent(
+public record LogEventDto(
         PessoaDto pessoaDto,
         String operacao,
         String microservico,
