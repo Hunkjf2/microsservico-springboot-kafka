@@ -24,8 +24,6 @@ spring:
     baseline-version: 0
     schemas: pessoa_db
 
-
-
 server:
   port: 8090
   servlet:

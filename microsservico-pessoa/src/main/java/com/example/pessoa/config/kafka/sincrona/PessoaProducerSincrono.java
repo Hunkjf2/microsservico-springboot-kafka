@@ -1,6 +1,7 @@
 package com.example.pessoa.config.kafka.sincrona;
 
 import com.example.pessoa.config.exception.PessoaProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import static com.example.pessoa.utils.ConverterMenssagem.*;
 
 @Component
 @RequiredArgsConstructor
@@ -20,15 +20,18 @@ import static com.example.pessoa.utils.ConverterMenssagem.*;
 public class PessoaProducerSincrono {
 
     private final ReplyingKafkaTemplate<String, String, String> replyingKafkaTemplate;
+    private final ObjectMapper objectMapper;
     private static final Integer TIMEOUT_SECONDS = 3;
 
     @CircuitBreaker(name = "serasa-service", fallbackMethod = "fallbackEnviarMensagem")
     public <T> T enviarMensagem(String topic, String replyTopic, Object mensagem, Class<T> responseType) {
         try {
-            ProducerRecord<String, String> request = criarProducerRecord(topic, replyTopic, serializar(mensagem));
+            String mensagemJson = objectMapper.writeValueAsString(mensagem);
+
+            ProducerRecord<String, String> request = criarProducerRecord(topic, replyTopic, mensagemJson);
             ConsumerRecord<String, String> response = enviarEvento(request);
 
-            return desserializar(response.value(), responseType);
+            return objectMapper.readValue(response.value(), responseType);
         } catch (Exception e) {
             throw new PessoaProcessingException("Erro ao processar mensagem síncrona", e);
         }

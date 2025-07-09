@@ -30,8 +30,8 @@ public class PessoaService {
 
     @Transactional
     public Pessoa cadastrar(PessoaDto pessoaDto) {
-        Optional<Boolean> negativado = serasaService.consultarSituacaoFinanceira(pessoaDto);
 
+        Optional<Boolean> negativado = serasaService.consultarSituacaoFinanceira(pessoaDto);
         Pessoa pessoa = pessoaMapper.toEntity(pessoaDto);
         pessoa.setNegativado(negativado.orElse(null));
         Pessoa pessoaSalva = salvar(pessoa);

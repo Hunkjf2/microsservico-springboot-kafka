@@ -49,7 +49,7 @@ public class ProducerConsumerConfig {
     @Bean
     public ConcurrentMessageListenerContainer<String, String> replyContainer() {
         String[] responseTopics = {
-                TOPIC_CONSULTAR_SERASA_RESPONSE
+                TOPIC_VERIFICAR_SERASA_RESPONSE
         };
         ContainerProperties containerProperties = new ContainerProperties(responseTopics);
         return new ConcurrentMessageListenerContainer<>(criarConsumerFactory(), containerProperties);

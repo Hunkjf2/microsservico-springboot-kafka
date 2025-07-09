@@ -17,9 +17,7 @@ public class LogService {
     private final PessoaMapper pessoaMapper;
 
     public void enviarDadosLog(Pessoa pessoa, String operacao) {
-        PessoaDto pessoaDto = pessoaMapper.toDto(pessoa);
-
-        LogEventDto logEventDto = informacaoLog(pessoaDto, operacao);
+        LogEventDto logEventDto = informacaoLog(pessoaMapper.toDto(pessoa), operacao);
 
         producerFactory.getAssincronoProducer().enviarParaTopico(
                 TOPIC_ENVIAR_LOG, logEventDto

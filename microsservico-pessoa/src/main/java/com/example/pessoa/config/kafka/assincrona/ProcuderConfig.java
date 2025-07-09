@@ -28,11 +28,18 @@ public class ProcuderConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.RETRIES_CONFIG, retriesConfig);
-        configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        configProps.put(ProducerConfig.RETRIES_CONFIG, retriesConfig); // Número de tentativas de reenvio em caso de falha
+        configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true); // Garante que reenvios não criem duplicatas no tópico
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
+    /**
+     * Cria o template Kafka para envio de mensagens.
+     * Utiliza a factory configurada para criar um template
+     * que facilita o envio de mensagens para tópicos Kafka.
+     *
+     * @return KafkaTemplate configurado para operações de envio
+     */
     @Bean
     public KafkaTemplate<String, String> criarKafkaTemplate() {
         return new KafkaTemplate<>(criarProducerFactory());

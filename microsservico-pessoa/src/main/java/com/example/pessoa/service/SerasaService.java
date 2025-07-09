@@ -18,8 +18,8 @@ public class SerasaService {
     public Optional<Boolean> consultarSituacaoFinanceira(PessoaDto pessoaDto) {
         try {
             Boolean resultado = this.enviarDadosSincrono(
-                    TOPIC_CONSULTAR_SERASA_REQUEST,
-                    TOPIC_CONSULTAR_SERASA_RESPONSE,
+                    TOPIC_VERIFICAR_SERASA_REQUEST,
+                    TOPIC_VERIFICAR_SERASA_RESPONSE,
                     pessoaDto.cpf(),
                     Boolean.class
             );

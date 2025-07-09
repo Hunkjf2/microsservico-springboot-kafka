@@ -3,12 +3,12 @@ package com.example.log.service;
 import com.example.log.dto.LogEventDto;
 import com.example.log.dto.PessoaDto;
 import com.example.log.model.Log;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import static com.example.log.constants.TopicLog.*;
-import static com.example.log.utils.ConverterMenssagem.*;
 
 /**
  * Consumer Kafka para processar mensagens relacionadas a Autor
@@ -20,15 +20,15 @@ import static com.example.log.utils.ConverterMenssagem.*;
 public class LogConsumerService {
     
     private final LogService logService;
+    private final ObjectMapper objectMapper;
 
     @KafkaListener(
-        topics = TOPIC_ENVIAR_LOG,
-        groupId = "${spring.kafka.consumer.group-id}"
+        topics = TOPIC_ENVIAR_LOG
     )
     public void processarEnvioLog(String mensagem) {
         try {
 
-            LogEventDto logEventDto = desserializar(mensagem, LogEventDto.class);
+            LogEventDto logEventDto = objectMapper.readValue(mensagem, LogEventDto.class);
             PessoaDto pessoaDto = logEventDto.pessoaDto();
 
             Log log = Log.builder()
