@@ -24,7 +24,7 @@ public class LogService {
                 "Jhon Doe"
         );
 
-        kafkaAssincronoService.send(TOPIC_ENVIAR_LOG, logEvent);
+        kafkaAssincronoService.publicarMensagem(TOPIC_ENVIAR_LOG, logEvent);
     }
 
 

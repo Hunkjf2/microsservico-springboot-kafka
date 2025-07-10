@@ -1,7 +1,6 @@
 package com.example.pessoa.service.kafka;
 
 import com.example.pessoa.config.exception.ExceptionHandler;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +17,13 @@ import java.time.Duration;
 public class KafkaSincronoService {
 
     private final ReplyingKafkaTemplate<String, Object, Object> replyingKafkaTemplate;
-    private final ObjectMapper objectMapper;
+    private final KafkaSerializationService serializationService;
     private static final Duration TIMEOUT = Duration.ofSeconds(3);
 
     @CircuitBreaker(name = "microsservico-serasa", fallbackMethod = "fallbackEnvio")
     public <T> T sendAndReceive(String topic, Object payload, Class<T> responseType) {
         try {
-            String mensagemJson = objectMapper.writeValueAsString(payload);
+            String mensagemJson = serializationService.serialize(payload);
 
             Message<String> message = MessageBuilder
                     .withPayload(mensagemJson)
@@ -34,7 +33,7 @@ public class KafkaSincronoService {
             var future = replyingKafkaTemplate.sendAndReceive(message, TIMEOUT);
             var response = future.get();
 
-            return objectMapper.convertValue(response.getPayload(), responseType);
+            return serializationService.deserialize(response.getPayload(), responseType);
         } catch (Exception e) {
             return ExceptionHandler.handleAndThrow(topic, e);
         }

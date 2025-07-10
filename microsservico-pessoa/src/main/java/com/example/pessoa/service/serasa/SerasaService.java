@@ -1,4 +1,4 @@
-package com.example.pessoa.service;
+package com.example.pessoa.service.serasa;
 
 import com.example.pessoa.dto.PessoaDto;
 import com.example.pessoa.service.kafka.KafkaSincronoService;
