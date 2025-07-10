@@ -16,7 +16,7 @@ import java.time.Duration;
 @Slf4j
 public class KafkaSincronoService {
 
-    private final ReplyingKafkaTemplate<String, Object, Object> replyingKafkaTemplate;
+    private final ReplyingKafkaTemplate<String, String, String> replyingKafkaTemplate;
     private final KafkaSerializationService serializationService;
     private static final Duration TIMEOUT = Duration.ofSeconds(3);
 

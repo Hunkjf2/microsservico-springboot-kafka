@@ -29,9 +29,11 @@ public class KafkaConfig {
     @Value("${spring.kafka.producer.retries}")
     private String retriesConfig;
 
+    // Assincrona
+
     // Producer para comunicação assíncrona
     @Bean
-    public ProducerFactory<String, Object> producerFactory() {
+    public ProducerFactory<String, String> producerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -41,14 +43,19 @@ public class KafkaConfig {
         return new DefaultKafkaProducerFactory<>(props);
     }
 
+    // Template para comunicação assíncrona
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
+    public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
+
+
+    // Sincrona
+
     // Consumer para comunicação síncrona
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory() {
+    public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -60,14 +67,14 @@ public class KafkaConfig {
 
     // Container para reply topics
     @Bean
-    public ConcurrentMessageListenerContainer<String, Object> replyContainer() {
+    public ConcurrentMessageListenerContainer<String, String> replyContainer() {
         ContainerProperties containerProperties = new ContainerProperties(TOPIC_VERIFICAR_SERASA_RESPONSE);
         return new ConcurrentMessageListenerContainer<>(consumerFactory(), containerProperties);
     }
 
     // Template para comunicação síncrona
     @Bean
-    public ReplyingKafkaTemplate<String, Object, Object> replyingKafkaTemplate() {
+    public ReplyingKafkaTemplate<String, String, String> replyingKafkaTemplate() {
         return new ReplyingKafkaTemplate<>(producerFactory(), replyContainer());
     }
 }

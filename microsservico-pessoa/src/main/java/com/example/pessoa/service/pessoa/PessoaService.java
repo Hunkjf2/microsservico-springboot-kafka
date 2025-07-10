@@ -8,14 +8,15 @@ import com.example.pessoa.repository.PessoaRepository;
 import com.example.pessoa.service.serasa.SerasaService;
 import com.example.pessoa.service.log.LogService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
 import static com.example.pessoa.constants.global.MenssagemSistema.*;
 import static com.example.pessoa.constants.log.Operacao.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
@@ -30,10 +31,11 @@ public class PessoaService {
 
     @Transactional
     public Pessoa cadastrar(PessoaDto pessoaDto) {
-        Optional<Boolean> negativado = serasaService.consultarSituacaoFinanceira(pessoaDto);
+        Boolean negativado = serasaService.consultarSituacaoFinanceira(pessoaDto);
+        log.info("Situação financeira consultada para CPF {}: {}", pessoaDto.cpf(), negativado);
 
         Pessoa pessoa = pessoaMapper.toEntity(pessoaDto);
-        pessoa.setNegativado(negativado.orElse(null));
+        pessoa.setNegativado(negativado);
 
         Pessoa pessoaSalva = salvar(pessoa);
         logService.enviarDadosLog(pessoaSalva, CADASTRO);
