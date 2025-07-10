@@ -1,10 +1,12 @@
-package com.example.pessoa.service;
+package com.example.pessoa.service.pessoa;
 
 import com.example.pessoa.dto.PessoaDto;
 import com.example.pessoa.config.exception.PessoaNaoEncontradaException;
 import com.example.pessoa.mapper.PessoaMapper;
 import com.example.pessoa.model.Pessoa;
 import com.example.pessoa.repository.PessoaRepository;
+import com.example.pessoa.service.SerasaService;
+import com.example.pessoa.service.log.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

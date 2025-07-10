@@ -1,7 +1,7 @@
 package com.example.pessoa.service;
 
-import com.example.pessoa.config.kafka.KafkaProducerFactory;
 import com.example.pessoa.dto.PessoaDto;
+import com.example.pessoa.service.kafka.KafkaSincronoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,22 +13,14 @@ import static com.example.pessoa.constants.serasa.TopicSerasa.*;
 @Slf4j
 public class SerasaService {
 
-    private final KafkaProducerFactory producerFactory;
+    private final KafkaSincronoService kafkaSincronoService;
 
     public Optional<Boolean> consultarSituacaoFinanceira(PessoaDto pessoaDto) {
-            Boolean resultado = this.enviarDadosSincrono(
-                    TOPIC_VERIFICAR_SERASA_REQUEST,
-                    TOPIC_VERIFICAR_SERASA_RESPONSE,
-                    pessoaDto.cpf(),
-                    Boolean.class
-            );
-            return Optional.ofNullable(resultado);
+        Boolean resultado = kafkaSincronoService.sendAndReceive(
+                TOPIC_VERIFICAR_SERASA_REQUEST,
+                pessoaDto.cpf(),
+                Boolean.class
+        );
+        return Optional.ofNullable(resultado);
     }
-
-    public <T> T enviarDadosSincrono(String topic, String replyTopic, Object dados, Class<T> responseType) {
-        return producerFactory.getSincronoProducer()
-                .enviarParaTopico(topic, replyTopic, dados, responseType);
-    }
-
-
 }
