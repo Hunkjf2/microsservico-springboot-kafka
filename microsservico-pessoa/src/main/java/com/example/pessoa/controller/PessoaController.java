@@ -4,6 +4,7 @@ import com.example.pessoa.dto.PessoaDto;
 import com.example.pessoa.service.PessoaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class PessoaController {
 
     @PostMapping
     @Operation(summary = "Cadastrar pessoa")
-    public ResponseEntity<Object> cadastrar(@RequestBody PessoaDto pessoaDto) {
+    public ResponseEntity<Object> cadastrar(@RequestBody @Valid PessoaDto pessoaDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 pessoaService.cadastrar(pessoaDto)
         );

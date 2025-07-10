@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class CustomExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(PessoaNaoEncontradaException.class)
     public ResponseEntity<ErrorResponse> handlePessoaNaoEncontrada(PessoaNaoEncontradaException ex) {
