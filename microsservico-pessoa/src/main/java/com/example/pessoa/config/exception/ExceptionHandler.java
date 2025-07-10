@@ -10,9 +10,9 @@ public class ExceptionHandler {
         if (e instanceof InterruptedException) {
             Thread.currentThread().interrupt();
             log.error("Thread interrompida durante comunicação com tópico '{}'", topic);
-            throw new KafkaMessageException("Operação foi interrompida", e);
+            throw new PessoaProcessingException("Operação foi interrompida", e);
         }
         log.error("Erro na comunicação síncrona com tópico '{}': {}", topic, e.getMessage());
-        throw new KafkaMessageException("Falha na comunicação", e);
+        throw new PessoaProcessingException("Falha na comunicação", e);
     }
 }

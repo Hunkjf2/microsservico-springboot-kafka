@@ -50,7 +50,6 @@ public class KafkaConfig {
     }
 
 
-
     // Sincrona
 
     // Consumer para comunicação síncrona

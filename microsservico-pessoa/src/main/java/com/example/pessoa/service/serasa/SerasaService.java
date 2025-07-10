@@ -5,7 +5,6 @@ import com.example.pessoa.service.kafka.KafkaSincronoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 import static com.example.pessoa.constants.serasa.TopicSerasa.*;
 
 @RequiredArgsConstructor
