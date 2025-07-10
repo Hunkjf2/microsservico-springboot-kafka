@@ -1,6 +1,6 @@
 package com.example.pessoa.service.kafka;
 
-import com.example.pessoa.config.exception.KafkaMessageException;
+import com.example.pessoa.config.exception.ExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class KafkaSincronoService {
     private final ObjectMapper objectMapper;
     private static final Duration TIMEOUT = Duration.ofSeconds(3);
 
-    @CircuitBreaker(name = "microsservico-serasa", fallbackMethod = "fallbackSend")
+    @CircuitBreaker(name = "microsservico-serasa", fallbackMethod = "fallbackEnvio")
     public <T> T sendAndReceive(String topic, Object payload, Class<T> responseType) {
         try {
             String mensagemJson = objectMapper.writeValueAsString(payload);
@@ -35,18 +35,13 @@ public class KafkaSincronoService {
             var response = future.get();
 
             return objectMapper.convertValue(response.getPayload(), responseType);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            log.error("Thread interrompida durante comunicação com tópico {}", topic);
-            throw new KafkaMessageException("Operação foi interrompida", e);
         } catch (Exception e) {
-            log.error("Erro na comunicação síncrona com tópico {}: {}", topic, e.getMessage());
-            throw new KafkaMessageException("Falha na comunicação síncrona", e);
+            return ExceptionHandler.handleAndThrow(topic, e);
         }
     }
 
     @SuppressWarnings("unused")
-    private <T> T fallbackSend(String topic, Object payload, Class<T> responseType, Throwable ex) {
+    private <T> T fallbackEnvio(String topic, Object payload, Class<T> responseType, Throwable ex) {
         log.warn("Fallback ativado para tópico '{}'. Erro: {}", topic, ex.getMessage());
         return null;
     }

@@ -12,7 +12,7 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5434/pessoa_db?currentSchema=pessoa_db
+    url: jdbc:postgresql://localhost:5433/pessoa_db?currentSchema=pessoa_db
     username: postgresql
     password: postgresql
   jpa:
@@ -33,13 +33,10 @@ resilience4j:
   circuitbreaker:
     instances:
       microsservico-serasa:
-        sliding-window-size: 8
-        minimum-number-of-calls: 4
+        minimum-number-of-calls: 3
         failure-rate-threshold: 50
         wait-duration-in-open-state: 10s
         automatic-transition-from-open-to-half-open-enabled: true
-        permitted-number-of-calls-in-half-open-state: 2
-
 
 logging:
   level:
