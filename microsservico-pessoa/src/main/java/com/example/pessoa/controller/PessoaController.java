@@ -1,7 +1,7 @@
 package com.example.pessoa.controller;
 
 import com.example.pessoa.dto.PessoaDto;
-import com.example.pessoa.service.PessoaService;
+import com.example.pessoa.service.pessoa.PessoaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

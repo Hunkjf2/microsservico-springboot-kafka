@@ -10,16 +10,13 @@ import java.util.List;
 public class SerasaService {
 
     public boolean consultarCpfSerasa(String cpf) {
-        String cpfLimpo = cpf.replaceAll("[^0-9]", "");
+        String cpfLimpo = cpf.replaceAll("\\D", "");
         return CPFS_MOCADOS.contains(cpfLimpo);
     }
 
     private static final List<String> CPFS_MOCADOS = Arrays.asList(
-            "12345678901",
-            "98765432100",
-            "11122233344",
-            "55566677788",
-            "99988877766"
+            "18142226006",
+            "16470435068"
     );
 
 }
