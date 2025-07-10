@@ -6,7 +6,6 @@ import com.example.pessoa.mapper.PessoaMapper;
 import com.example.pessoa.model.Pessoa;
 import com.example.pessoa.repository.PessoaRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
@@ -15,7 +14,6 @@ import static com.example.pessoa.constants.log.Operacao.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
@@ -30,10 +28,11 @@ public class PessoaService {
 
     @Transactional
     public Pessoa cadastrar(PessoaDto pessoaDto) {
-
         Optional<Boolean> negativado = serasaService.consultarSituacaoFinanceira(pessoaDto);
+
         Pessoa pessoa = pessoaMapper.toEntity(pessoaDto);
         pessoa.setNegativado(negativado.orElse(null));
+
         Pessoa pessoaSalva = salvar(pessoa);
         logService.enviarDadosLog(pessoaSalva, CADASTRO);
         return pessoaSalva;
@@ -41,8 +40,7 @@ public class PessoaService {
 
     @Transactional
     public Pessoa editar(Long id, PessoaDto pessoaDto) {
-        Pessoa pessoa = this.consultar(id);
-        Pessoa pessoaAtualizada = this.salvar(atualizaDados(pessoaDto, pessoa));
+        Pessoa pessoaAtualizada = this.salvar(atualizaDados(pessoaDto, this.consultar(id)));
         logService.enviarDadosLog(pessoaAtualizada, ATUALIZACAO);
         return pessoaAtualizada;
     }

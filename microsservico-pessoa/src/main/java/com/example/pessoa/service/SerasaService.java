@@ -16,24 +16,18 @@ public class SerasaService {
     private final KafkaProducerFactory producerFactory;
 
     public Optional<Boolean> consultarSituacaoFinanceira(PessoaDto pessoaDto) {
-        try {
             Boolean resultado = this.enviarDadosSincrono(
                     TOPIC_VERIFICAR_SERASA_REQUEST,
                     TOPIC_VERIFICAR_SERASA_RESPONSE,
                     pessoaDto.cpf(),
                     Boolean.class
             );
-            log.info("Resultado da consulta: {} ",resultado);
             return Optional.ofNullable(resultado);
-        } catch (Exception e){
-            log.error("Erro ao consultar situacao financeira", e);
-            return Optional.empty();
-        }
     }
 
     public <T> T enviarDadosSincrono(String topic, String replyTopic, Object dados, Class<T> responseType) {
         return producerFactory.getSincronoProducer()
-                .enviarMensagem(topic, replyTopic, dados, responseType);
+                .enviarParaTopico(topic, replyTopic, dados, responseType);
     }
 
 

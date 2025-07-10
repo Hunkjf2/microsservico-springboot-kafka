@@ -10,6 +10,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.stereotype.Component;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -24,22 +25,26 @@ public class PessoaProducerSincrono {
     private static final Integer TIMEOUT_SECONDS = 3;
 
     @CircuitBreaker(name = "serasa-service", fallbackMethod = "fallbackEnviarMensagem")
-    public <T> T enviarMensagem(String topic, String replyTopic, Object mensagem, Class<T> responseType) {
+    public <T> T enviarParaTopico(String topic, String replyTopic, Object mensagem, Class<T> responseType) {
+        String correlationId = UUID.randomUUID().toString();
         try {
             String mensagemJson = objectMapper.writeValueAsString(mensagem);
+            ProducerRecord<String, String> request = criarProducerRecord(topic, replyTopic, mensagemJson, correlationId);
 
-            ProducerRecord<String, String> request = criarProducerRecord(topic, replyTopic, mensagemJson);
             ConsumerRecord<String, String> response = enviarEvento(request);
-
             return objectMapper.readValue(response.value(), responseType);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PessoaProcessingException("Timeout na comunicação síncrona", e);
         } catch (Exception e) {
             throw new PessoaProcessingException("Erro ao processar mensagem síncrona", e);
         }
     }
 
-    private ProducerRecord<String, String> criarProducerRecord(String topic, String replyTopic, String mensagemJson) {
+    private ProducerRecord<String, String> criarProducerRecord(String topic, String replyTopic, String mensagemJson, String correlationId) {
         ProducerRecord<String, String> request = new ProducerRecord<>(topic, mensagemJson);
         request.headers().add("kafka_replyTopic", replyTopic.getBytes());
+        request.headers().add("kafka_correlationId", correlationId.getBytes());
         return request;
     }
 

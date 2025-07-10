@@ -46,5 +46,6 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.connections.pooling: ERROR
     org.apache.kafka: INFO
+    org.springframework.kafka.requestreply.ReplyingKafkaTemplate: OFF
 
 
