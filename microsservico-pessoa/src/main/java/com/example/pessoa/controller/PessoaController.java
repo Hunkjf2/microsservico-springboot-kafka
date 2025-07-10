@@ -28,7 +28,7 @@ public class PessoaController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar pessoa")
-    public ResponseEntity<Object> editar(@PathVariable Long id, @RequestBody PessoaDto pessoaDto) {
+    public ResponseEntity<Object> editar(@PathVariable Long id, @RequestBody @Valid PessoaDto pessoaDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 pessoaService.editar(id, pessoaDto)
         );

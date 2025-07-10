@@ -1,8 +1,7 @@
 package com.example.pessoa.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-
+import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -10,15 +9,16 @@ public record PessoaDto(
         Long id,
 
         @NotBlank(message = "Nome é obrigatório")
-        @Size(max = 300, message = "Nome deve ter no máximo 300 caracteres")
+        @Size(min = 2, max = 150, message = "Nome deve ter entre 2 a 150 caracteres")
         String nome,
 
         @NotBlank(message = "CPF é obrigatório")
-        @Size(max = 300, message = "Nome deve ter no máximo 300 caracteres")
+        @CPF(message = "CPF deve ter formato válido")
+        @Size(max = 11, message = "CPF deve ter 11 caracteres")
         String cpf,
 
-        @NotBlank(message = "Data de Nascimento é obrigatório")
-        @Size(max = 300, message = "Nome deve ter no máximo 300 caracteres")
+        @NotNull(message = "Data de Nascimento é obrigatória")
+        @Past(message = "Data de nascimento deve ser no passado")
         LocalDate dataNascimento,
 
         Boolean negativado,
