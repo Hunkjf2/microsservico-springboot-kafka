@@ -1,4 +1,4 @@
-package com.example.log.config;
+package com.example.log.config.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

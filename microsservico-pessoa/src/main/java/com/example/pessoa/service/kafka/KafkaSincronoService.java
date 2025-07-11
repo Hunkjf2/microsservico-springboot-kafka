@@ -35,7 +35,7 @@ public class KafkaSincronoService {
 
             return serializationService.deserialize(response.getPayload(), responseType);
         } catch (Exception e) {
-            return ExceptionHandler.handleAndThrow(topic, e);
+            throw ExceptionHandler.handleException(e);
         }
     }
 

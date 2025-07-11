@@ -10,10 +10,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import static com.example.log.constants.TopicLog.*;
 
-/**
- * Consumer Kafka para processar mensagens relacionadas a Autor
- * Escuta os tópicos específicos e delega o processamento para o LogService
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
