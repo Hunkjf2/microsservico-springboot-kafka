@@ -16,6 +16,6 @@ public class KafkaAssincronoService {
     public void publicarMensagem(String topic, Object payload) {
         String mensagemJson = serializationService.serialize(payload);
         kafkaTemplate.send(topic, mensagemJson);
-        log.debug("Mensagem enviada para tópico: {}", topic);
+        log.info("Mensagem enviada para tópico: {}", topic);
     }
 }

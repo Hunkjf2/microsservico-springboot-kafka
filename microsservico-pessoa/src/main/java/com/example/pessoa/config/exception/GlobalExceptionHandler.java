@@ -37,8 +37,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler(PessoaProcessingException.class)
-    public ResponseEntity<ErrorResponse> handlePessoaProcessingException(PessoaProcessingException ex) {
+    @ExceptionHandler(ProcessingException.class)
+    public ResponseEntity<ErrorResponse> handlePessoaProcessingException(ProcessingException ex) {
         ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }

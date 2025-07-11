@@ -1,6 +1,6 @@
 package com.example.pessoa.service.kafka;
 
-import com.example.pessoa.config.exception.KafkaMessageException;
+import com.example.pessoa.config.exception.ProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaSerializationService {
 
-    protected final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public String serialize(Object payload) {
         try {
             return objectMapper.writeValueAsString(payload);
         } catch (Exception e) {
-            throw new KafkaMessageException("Falha na serialização", e);
+            throw new ProcessingException("Falha na serialização", e);
         }
     }
 
@@ -23,7 +23,7 @@ public class KafkaSerializationService {
         try {
             return objectMapper.convertValue(payload, targetType);
         } catch (Exception e) {
-            throw new KafkaMessageException("Falha na deserialização", e);
+            throw new ProcessingException("Falha na deserialização", e);
         }
     }
 
