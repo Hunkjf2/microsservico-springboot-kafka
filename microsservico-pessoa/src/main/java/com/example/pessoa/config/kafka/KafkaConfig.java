@@ -1,6 +1,5 @@
 package com.example.pessoa.config.kafka;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -17,7 +16,6 @@ import java.util.Map;
 import static com.example.pessoa.constants.serasa.TopicSerasa.*;
 
 @Configuration
-@RequiredArgsConstructor
 public class KafkaConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")

@@ -112,7 +112,7 @@ private static final Set<String> CPFS_NEGATIVADOS = Set.of(
 
 ### Para CPF negativado
 ```json
-"22222222222"
+"22222222222                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "
 ```
 ```json
 "true"

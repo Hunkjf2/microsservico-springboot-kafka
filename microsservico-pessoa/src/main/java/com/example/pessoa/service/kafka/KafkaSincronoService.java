@@ -23,10 +23,10 @@ public class KafkaSincronoService {
     @CircuitBreaker(name = "microsservico-serasa", fallbackMethod = "fallbackEnvio")
     public <T> T sendAndReceive(String topic, Object payload, Class<T> responseType) {
         try {
-            String mensagemJson = serializationService.serialize(payload);
+            String stringJson = serializationService.serialize(payload);
 
             Message<String> message = MessageBuilder
-                    .withPayload(mensagemJson)
+                    .withPayload(stringJson)
                     .setHeader(KafkaHeaders.TOPIC, topic)
                     .build();
 

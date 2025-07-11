@@ -12,6 +12,7 @@ import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ContainerProperties;
 import java.util.Map;
 
+
 @Configuration
 public class KafkaConfig {
 
@@ -45,7 +46,8 @@ public class KafkaConfig {
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
-                ProducerConfig.RETRIES_CONFIG, retriesConfig
+                ProducerConfig.RETRIES_CONFIG, retriesConfig,
+                ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true
         ));
     }
 

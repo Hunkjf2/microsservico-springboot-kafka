@@ -167,7 +167,7 @@ CREATE TABLE pessoa (
 ```json
 {
   "nome": "João Silva",
-  "cpf": "12345678901",
+  "cpf": "11111111111",
   "dataNascimento": "1990-01-01"
 }
 ```
@@ -179,7 +179,7 @@ CREATE TABLE pessoa (
 ```json
 {
   "nome": "João Silva Santos",
-  "cpf": "12345678901",
+  "cpf": "11111111111",
   "dataNascimento": "1990-01-01"
 }
 ```
@@ -286,33 +286,3 @@ logging:
 As migrações são executadas automaticamente pelo Flyway:
 - `V1__create_table_pessoa.sql` - Criação da tabela pessoa
 
-## 🧪 Testando a API
-
-### Usando cURL
-
-#### Cadastrar Pessoa
-```bash
-curl -X POST http://localhost:8090/api/pessoa \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nome": "João Silva",
-    "cpf": "12345678901",
-    "dataNascimento": "1990-01-01"
-  }'
-```
-
-#### Atualizar Pessoa
-```bash
-curl -X PUT http://localhost:8090/api/pessoa/1 \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nome": "João Silva Santos",
-    "cpf": "12345678901",
-    "dataNascimento": "1990-01-01"
-  }'
-```
-
-#### Deletar Pessoa
-```bash
-curl -X DELETE http://localhost:8090/api/pessoa/1
-```
