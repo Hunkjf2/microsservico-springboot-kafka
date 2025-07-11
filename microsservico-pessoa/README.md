@@ -1,9 +1,9 @@
 # Microsserviço Pessoa
 
-## Descrição
+## 📋 Descrição
 Microsserviço responsável pelo gerenciamento de pessoas no sistema. Realiza operações CRUD para entidades Pessoa e integra com outros serviços através de mensageria Kafka para consulta no Serasa e envio de logs de auditoria.
 
-## Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 - **Java 21**
 - **Spring Boot 3.5.3**
 - **Spring Data JPA**
@@ -16,67 +16,8 @@ Microsserviço responsável pelo gerenciamento de pessoas no sistema. Realiza op
 - **Bean Validation**
 - **Maven**
 
-## Funcionalidades
-- Cadastro de pessoas com validação de CPF
-- Atualização de dados de pessoas
-- Exclusão de pessoas
-- Integração com serviço Serasa (verificação de negativação)
-- Envio de logs de auditoria
-- Circuit Breaker para resilência
-- Documentação automática da API com Swagger
+## 🏗️ Estrutura do Projeto
 
-## Configuração
-
-### Banco de Dados
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5433/pessoa_db?currentSchema=pessoa_db
-    username: postgresql
-    password: postgresql
-```
-
-### Kafka
-```yaml
-spring:
-  kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      retries: 3
-    consumer:
-      group-id: pessoa-reply-group
-      auto-offset-reset: earliest
-```
-
-## Como Executar
-
-### Pré-requisitos
-- Java 21
-- PostgreSQL (porta 5433)
-- Apache Kafka (porta 9092)
-- Maven
-
-### Passos
-1. Configure o banco PostgreSQL na porta 5433
-2. Configure o Kafka na porta 9092
-3. Execute o comando:
-```bash
-./mvnw spring-boot:run
-```
-
-O serviço estará disponível em: `http://localhost:8090`
-
-## API Endpoints
-
-### Swagger UI
-- **URL**: `http://localhost:8090/swagger-ui.html`
-
-### Principais Endpoints
-- `POST /api/pessoa` - Cadastrar pessoa
-- `PUT /api/pessoa/{id}` - Atualizar pessoa
-- `DELETE /api/pessoa/{id}` - Deletar pessoa
-
-## Estrutura do Projeto
 ```
 src/main/java/com/example/pessoa/
 ├── PessoaApplication.java           # Classe principal da aplicação
@@ -85,6 +26,7 @@ src/main/java/com/example/pessoa/
 │   │   ├── ExceptionHandler.java    # Utilitário para tratamento de exceções
 │   │   ├── GlobalExceptionHandler.java # Manipulador global de exceções
 │   │   ├── PessoaNaoEncontradaException.java # Exceção customizada
+│   │   ├── CpfJaCadastradoException.java # Exceção para CPF duplicado
 │   │   └── ProcessingException.java # Exceção de processamento
 │   ├── jackson/
 │   │   └── ObjectMapperConfig.java  # Configuração do Jackson
@@ -98,6 +40,8 @@ src/main/java/com/example/pessoa/
 │   ├── log/
 │   │   ├── Operacao.java           # Constantes de operações de log
 │   │   └── TopicLog.java           # Tópicos de log
+│   ├── pessoa/
+│   │   └── Pessoa.java             # Constantes relacionadas a pessoa
 │   └── serasa/
 │       └── TopicSerasa.java        # Tópicos do Serasa
 ├── controller/
@@ -130,46 +74,96 @@ src/main/resources/
     └── V1__create_table_pessoa.sql # Script de criação da tabela pessoa
 ```
 
-## Modelo de Dados
+## 🔧 Configuração
+
+### Banco de Dados
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/pessoa_db?currentSchema=pessoa_db
+    username: postgresql
+    password: postgresql
+```
+
+### Kafka
+```yaml
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      retries: 3
+    consumer:
+      group-id: pessoa-reply-group
+      auto-offset-reset: earliest
+```
+
+### Circuit Breaker
+```yaml
+resilience4j:
+  circuitbreaker:
+    instances:
+      microsservico-serasa:
+        minimum-number-of-calls: 3
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        automatic-transition-from-open-to-half-open-enabled: true
+```
+
+## 🚀 Como Executar
+
+### Pré-requisitos
+- Java 21
+- PostgreSQL (porta 5433)
+- Apache Kafka (porta 9092)
+- Maven
+
+### Passos
+1. Configure o banco PostgreSQL na porta 5433
+2. Configure o Kafka na porta 9092
+3. Execute o comando:
+```bash
+./mvnw spring-boot:run
+```
+
+O serviço estará disponível em: `http://localhost:8090`
+
+## 📊 Modelo de Dados
 
 ### Tabela `pessoa`
 | Campo | Tipo | Descrição |
 |-------|------|-----------|
 | id | BIGSERIAL | Chave primária |
 | nome | VARCHAR(150) | Nome da pessoa |
-| cpf | VARCHAR(11) | CPF (validado) |
+| cpf | VARCHAR(11) | CPF (validado e único) |
 | data_nascimento | DATE | Data de nascimento |
 | negativado | BOOLEAN | Status de negativação (consultado no Serasa) |
 | data_hora_criacao | TIMESTAMP | Data e hora da criação (automática) |
 
-## Integração com Outros Serviços
+### Script de Criação
+```sql
+CREATE TABLE pessoa (
+     id bigserial NOT NULL,
+     nome varchar(150) NOT NULL,
+     cpf varchar(11) UNIQUE NOT NULL,
+     data_nascimento date NOT NULL,
+     negativado boolean NULL,
+     data_hora_criacao timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     CONSTRAINT pessoa_pkey PRIMARY KEY (id)
+);
+```
 
-### Serviço Serasa
-- **Tópico Request**: `verificar-serasa-request`
-- **Tópico Response**: `verificar-serasa-response`
-- **Tipo**: Comunicação síncrona com timeout de 3 segundos
-- **Circuit Breaker**: Ativado com fallback
+## 🌐 API Endpoints
 
-### Serviço de Log
-- **Tópico**: `enviar-log`
-- **Tipo**: Comunicação assíncrona
-- **Operações Logadas**: CADASTRO, ATUALIZAÇÃO, EXCLUSÃO
+### Swagger UI
+- **URL**: `http://localhost:8090/swagger-ui.html`
+- **API Docs**: `http://localhost:8090/v3/api-docs`
 
-## Resilência
-O serviço utiliza Circuit Breaker para o serviço Serasa:
-- **Mínimo de chamadas**: 3
-- **Taxa de falhas**: 50%
-- **Tempo de espera**: 10 segundos
-- **Transição automática**: Habilitada
+### Endpoints Disponíveis
 
-## Validações
-- **Nome**: 2 a 150 caracteres, obrigatório
-- **CPF**: Formato válido (validação brasileira), obrigatório
-- **Data de Nascimento**: Data no passado, obrigatória
-
-## Exemplo de Payload
-
-### Cadastro/Atualização de Pessoa
+#### 1. Cadastrar Pessoa
+- **Endpoint**: `POST /api/pessoa`
+- **Descrição**: Cadastra uma nova pessoa no sistema
+- **Request Body**:
 ```json
 {
   "nome": "João Silva",
@@ -178,28 +172,147 @@ O serviço utiliza Circuit Breaker para o serviço Serasa:
 }
 ```
 
-### Resposta
+#### 2. Atualizar Pessoa
+- **Endpoint**: `PUT /api/pessoa/{id}`
+- **Descrição**: Atualiza os dados de uma pessoa existente
+- **Request Body**:
 ```json
 {
-  "id": 1,
-  "nome": "João Silva",
+  "nome": "João Silva Santos",
   "cpf": "12345678901",
-  "dataNascimento": "1990-01-01",
-  "negativado": false,
-  "dataHoraCriacao": "2024-01-01T10:00:00"
+  "dataNascimento": "1990-01-01"
 }
 ```
 
-## Tratamento de Erros
-- Validação automática de campos
-- Exceções customizadas com mensagens claras
-- Resposta padronizada para erros
-- Logs detalhados para depuração
+#### 3. Deletar Pessoa
+- **Endpoint**: `DELETE /api/pessoa/{id}`
+- **Descrição**: Remove uma pessoa do sistema
 
-## Migrations
+
+## 🔄 Integração com Outros Serviços
+
+### Serviço Serasa (Comunicação Síncrona)
+- **Tópico Request**: `verificar-serasa-request`
+- **Tópico Response**: `verificar-serasa-response`
+- **Timeout**: 3 segundos
+- **Circuit Breaker**: Ativado com fallback
+- **Finalidade**: Verificar situação financeira durante o cadastro
+
+### Serviço de Log (Comunicação Assíncrona)
+- **Tópico**: `enviar-log`
+- **Operações Logadas**:
+    - `CADASTRO`
+    - `ATUALIZAÇÃO`
+    - `EXCLUSÃO`
+
+## ✅ Validações
+
+### Validações de Campo
+- **Nome**:
+    - Obrigatório
+    - Entre 2 e 150 caracteres
+- **CPF**:
+    - Obrigatório
+    - Formato válido (validação brasileira)
+    - Máximo 11 caracteres
+    - Único no sistema
+- **Data de Nascimento**:
+    - Obrigatória
+    - Deve ser no passado
+
+### Exemplo de Erro de Validação
+```json
+{
+  "status": 400,
+  "message": "Erro de validação",
+  "errors": {
+    "nome": "Nome é obrigatório",
+    "cpf": "CPF deve ter formato válido"
+  }
+}
+```
+
+## 🛡️ Tratamento de Erros
+
+### Exceções Customizadas
+- **PessoaNaoEncontradaException**: HTTP 404
+- **CpfJaCadastradoException**: HTTP 409
+- **ProcessingException**: HTTP 500
+
+### Respostas de Erro Padronizadas
+```json
+{
+  "status": 404,
+  "message": "Não existe este registro na base de dados."
+}
+```
+
+## 🔄 Fluxo de Negócio
+
+### Cadastro de Pessoa
+1. Recebe dados via POST
+2. Valida campos obrigatórios
+3. Verifica se CPF já existe
+4. Consulta situação no Serasa (síncrono)
+5. Salva pessoa no banco
+6. Envia log de auditoria (assíncrono)
+7. Retorna dados da pessoa criada
+
+### Atualização de Pessoa
+1. Busca pessoa por ID
+2. Valida se CPF não pertence a outra pessoa
+3. Atualiza dados (nome e data nascimento)
+4. Salva no banco
+5. Envia log de auditoria
+6. Retorna dados atualizados
+
+### Exclusão de Pessoa
+1. Busca pessoa por ID
+2. Remove do banco
+3. Envia log de auditoria
+
+## 🔧 Configurações Adicionais
+
+### Logs
+```yaml
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.apache.kafka: INFO
+    org.springframework.kafka.requestreply.ReplyingKafkaTemplate: OFF
+```
+
+### Migrations
 As migrações são executadas automaticamente pelo Flyway:
 - `V1__create_table_pessoa.sql` - Criação da tabela pessoa
 
-## Configurações de Log
-- Logs do Hibernate SQL em nível DEBUG
-- Logs do Apache Kafka em nível INFO
+## 🧪 Testando a API
+
+### Usando cURL
+
+#### Cadastrar Pessoa
+```bash
+curl -X POST http://localhost:8090/api/pessoa \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "João Silva",
+    "cpf": "12345678901",
+    "dataNascimento": "1990-01-01"
+  }'
+```
+
+#### Atualizar Pessoa
+```bash
+curl -X PUT http://localhost:8090/api/pessoa/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "João Silva Santos",
+    "cpf": "12345678901",
+    "dataNascimento": "1990-01-01"
+  }'
+```
+
+#### Deletar Pessoa
+```bash
+curl -X DELETE http://localhost:8090/api/pessoa/1
+```

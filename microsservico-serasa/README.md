@@ -82,8 +82,8 @@ O serviço utiliza uma lista estática de CPFs para simular negativações:
 
 ```java
 private static final Set<String> CPFS_NEGATIVADOS = Set.of(
-    "18142226006",
-    "16470435068"
+    "11111111111",
+    "22222222222"
 );
 ```
 
@@ -102,7 +102,7 @@ private static final Set<String> CPFS_NEGATIVADOS = Set.of(
 
 ### Request (CPF enviado no tópico)
 ```json
-"12345678901"
+"11111111111"
 ```
 
 ### Response (retorno automático no tópico de resposta)
@@ -112,7 +112,7 @@ private static final Set<String> CPFS_NEGATIVADOS = Set.of(
 
 ### Para CPF negativado
 ```json
-"18142226006"
+"22222222222"
 ```
 ```json
 "true"

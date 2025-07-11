@@ -1,9 +1,9 @@
 # Microsserviço Log
 
-## Descrição
-Microsserviço responsável pelo gerenciamento de logs de auditoria no sistema. Consome mensagens de eventos de outros microsserviços e armazena informações de auditoria no banco de dados PostgreSQL.
+## 📋 Descrição
+Microsserviço responsável pelo gerenciamento de logs de auditoria no sistema. Consome mensagens de eventos de outros microsserviços e armazena informações de auditoria no banco de dados PostgreSQL de forma assíncrona.
 
-## Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 - **Java 21**
 - **Spring Boot 3.5.0**
 - **Spring Data JPA**
@@ -14,58 +14,8 @@ Microsserviço responsável pelo gerenciamento de logs de auditoria no sistema. 
 - **Jackson** (processamento JSON)
 - **Maven**
 
-## Funcionalidades
-- Consumo de eventos de auditoria via Kafka
-- Armazenamento de logs no banco PostgreSQL
-- Processamento assíncrono de mensagens
-- Migração automática do banco de dados
+## 🏗️ Estrutura do Projeto
 
-## Configuração
-
-### Banco de Dados
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/log_db?currentSchema=log_db
-    username: postgresql
-    password: postgresql
-```
-
-### Kafka
-```yaml
-spring:
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: log-service-group
-      auto-offset-reset: earliest
-      enable-auto-commit: true
-```
-
-## Como Executar
-
-### Pré-requisitos
-- Java 21
-- PostgreSQL (porta 5432)
-- Apache Kafka (porta 9092)
-- Maven
-
-### Passos
-1. Configure o banco PostgreSQL na porta 5432
-2. Configure o Kafka na porta 9092
-3. Execute o comando:
-```bash
-./mvnw spring-boot:run
-```
-
-O serviço estará disponível em: `http://localhost:8060`
-
-## Tópicos Kafka
-
-### Consumo
-- **`enviar-log`**: Recebe eventos de log dos outros microsserviços
-
-## Estrutura do Projeto
 ```
 src/main/java/com/example/log/
 ├── LogApplication.java              # Classe principal da aplicação
@@ -94,7 +44,57 @@ src/main/resources/
     └── V1__create_table_log.sql     # Script de criação da tabela log
 ```
 
-## Modelo de Dados
+## 🔧 Configuração
+
+### Banco de Dados
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/log_db?currentSchema=log_db
+    username: postgresql
+    password: postgresql
+```
+
+### Kafka
+```yaml
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: log-service-group
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+```
+
+### Flyway
+```yaml
+spring:
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
+    default-schema: log_db
+    schemas: log_db
+```
+
+## 🚀 Como Executar
+
+### Pré-requisitos
+- Java 21
+- PostgreSQL (porta 5432)
+- Apache Kafka (porta 9092)
+- Maven
+
+### Passos
+1. Configure o banco PostgreSQL na porta 5432
+2. Configure o Kafka na porta 9092
+3. Execute o comando:
+```bash
+./mvnw spring-boot:run
+```
+
+O serviço estará disponível em: `http://localhost:8060`
+
+## 📊 Modelo de Dados
 
 ### Tabela `log`
 | Campo | Tipo | Descrição |
@@ -107,43 +107,12 @@ src/main/resources/
 | nome_microsservico | VARCHAR(60) | Nome do microsserviço que gerou o log |
 | data_hora_criacao | TIMESTAMP | Data e hora da criação do log |
 
-## Exemplo de Mensagem Consumida
-```json
-{
-  "pessoaDto": {
-    "id": 1,
-    "nome": "João Silva",
-    "cpf": "12345678901",
-    "dataNascimento": "1990-01-01",
-    "negativado": false,
-    "dataHoraCriacao": "2024-01-01T10:00:00"
-  },
-  "operacao": "CADASTRO",
-  "microservico": "microservico-pessoa",
-  "idUsuario": 1,
-  "nomeUsuario": "Admin"
-}
-```
-
-## Migrations
-As migrações são executadas automaticamente pelo Flyway:
-- `V1__create_table_log.sql` - Criação da tabela log
-
-## Configurações de Log
-- Logs do Spring Kafka em nível DEBUG
-- Logs do Hibernate em nível DEBUG para SQL
-- Logs de conexão do pool em nível ERROR
-
-## Tratamento de Erros
-- Captura e registra erros de processamento de mensagens
-- Não interrompe o fluxo de consumo em caso de erro
-- Logs detalhados para depuração
-
-## Integração
-Este microsserviço é consumido por:
-- **Microsserviço Pessoa**: Envia logs de operações CRUD de pessoas
-
-## Monitoramento
-- Logs estruturados para rastreamento de operações
-- Métricas de consumo do Kafka
-- Auditoria completa de todas as operações do sistema
+### Script de Criação
+```sql
+CREATE TABLE log (
+    id BIGSERIAL PRIMARY KEY,
+    id_usuario bigint NOT NULL,
+    nome_usuario VARCHAR(100) NOT NULL,
+    operacao VARCHAR(30) NOT NULL,
+    dados TEXT NOT NULL,
+    nome
