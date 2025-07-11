@@ -1,5 +1,6 @@
 package com.example.pessoa.service.pessoa;
 
+import com.example.pessoa.config.exception.CpfJaCadastradoException;
 import com.example.pessoa.dto.PessoaDto;
 import com.example.pessoa.config.exception.PessoaNaoEncontradaException;
 import com.example.pessoa.mapper.PessoaMapper;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static com.example.pessoa.constants.global.MenssagemSistema.*;
 import static com.example.pessoa.constants.log.Operacao.*;
+import static com.example.pessoa.constants.pessoa.Pessoa.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class PessoaService {
 
     @Transactional
     public Pessoa cadastrar(PessoaDto pessoaDto) {
+        validarCpfUnico(pessoaDto.cpf());
         Boolean negativado = serasaService.consultarSituacaoFinanceira(pessoaDto);
         log.info("Situação financeira consultada para CPF {}: {}", pessoaDto.cpf(), negativado);
 
@@ -44,6 +47,7 @@ public class PessoaService {
 
     @Transactional
     public Pessoa editar(Long id, PessoaDto pessoaDto) {
+        validarCpfUnicoParaEdicao(pessoaDto.cpf(), id);
         Pessoa pessoaAtualizada = this.salvar(atualizaDados(pessoaDto, this.consultar(id)));
         logService.enviarDadosLog(pessoaAtualizada, ATUALIZACAO);
         return pessoaAtualizada;
@@ -64,6 +68,18 @@ public class PessoaService {
 
     private Pessoa salvar(Pessoa pessoa) {
         return pessoaRepository.save(pessoa);
+    }
+
+    private void validarCpfUnicoParaEdicao(String cpf, Long id) {
+        if (pessoaRepository.existsByCpfAndIdNot(cpf, id)) {
+            throw new CpfJaCadastradoException(CPF_CADASTRADO);
+        }
+    }
+
+    private void validarCpfUnico(String cpf) {
+        if (pessoaRepository.existsByCpf(cpf)) {
+            throw new CpfJaCadastradoException(CPF_CADASTRADO);
+        }
     }
 
 }

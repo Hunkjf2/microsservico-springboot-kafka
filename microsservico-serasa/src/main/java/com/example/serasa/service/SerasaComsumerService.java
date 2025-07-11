@@ -21,9 +21,11 @@ public class SerasaComsumerService {
     public String consultarCpf(String mensagem, Acknowledgment acknowledgment) {
         try {
             String cpf = serializationService.deserialize(mensagem, String.class);
+            boolean resultado = serasaService.consultarCpfSerasa(cpf);
 
+            log.info("Resultado da consulta para CPF {}: {}", cpf, resultado);
             acknowledgment.acknowledge();
-            return String.valueOf(serasaService.consultarCpfSerasa(cpf));
+            return String.valueOf(resultado);
         } catch (Exception e) {
             log.error("Erro ao processar CPF {}: {}", mensagem, e.getMessage());
             throw e;

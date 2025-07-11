@@ -1,7 +1,7 @@
 # Microsserviço Serasa
 
 ## Descrição
-Microsserviço responsável por simular consultas de negativação no Serasa. Processa solicitações de verificação de CPF e retorna informações sobre a situação financeira da pessoa.
+Microsserviço responsável por simular consultas de negativação no Serasa. Processa solicitações síncronas de verificação de CPF via Kafka e retorna informações sobre a situação financeira da pessoa baseada em uma base de dados mockada.
 
 ## Tecnologias Utilizadas
 - **Java 21**
@@ -9,13 +9,15 @@ Microsserviço responsável por simular consultas de negativação no Serasa. Pr
 - **Spring Kafka**
 - **Lombok**
 - **Jackson** (processamento JSON)
+- **Bean Validation**
 - **Maven**
 
 ## Funcionalidades
 - Simulação de consulta Serasa por CPF
-- Processamento de mensagens síncronas via Kafka
+- Processamento de mensagens síncronas via Kafka (Request-Reply)
 - Base de dados mockada para testes
 - Resposta automática para solicitações de verificação
+- Acknowledgment manual para garantir processamento
 
 ## Configuração
 
@@ -35,7 +37,7 @@ spring:
 
 ### Pré-requisitos
 - Java 21
-- Apache Kafka
+- Apache Kafka (porta 9092)
 - Maven
 
 ### Passos
@@ -53,55 +55,95 @@ O serviço estará disponível em: `http://localhost:8070`
 - **`verificar-serasa-request`**: Recebe solicitações de verificação de CPF
 
 ### Produção
-- **`verificar-serasa-response`**: Envia resposta da consulta
+- **`verificar-serasa-response`**: Envia resposta da consulta (automático via @SendTo)
 
-## Fluxo de Comunicação
-1. Recebe CPF no tópico `verificar-serasa-request`
-2. Processa a consulta (simulação)
-3. Retorna resultado (true/false) no tópico `verificar-serasa-response`
+## Estrutura do Projeto
+```
+src/main/java/com/example/serasa/
+├── SerasaApplication.java           # Classe principal da aplicação
+├── config/
+│   ├── exception/
+│   │   └── SerasaMessageException.java # Exceção para erros de mensageria
+│   └── kafka/
+│       └── KafkaConfig.java         # Configuração Kafka (Consumer/Producer)
+├── constants/
+│   └── TopicSerasa.java             # Constantes dos tópicos Kafka
+└── service/
+    ├── SerasaComsumerService.java   # Consumidor Kafka com padrão Request-Reply
+    ├── SerasaService.java           # Serviço de negócio para consulta Serasa
+    └── SerializationService.java    # Serviço de serialização/deserialização
+
+src/main/resources/
+└── application.yml                  # Configurações da aplicação
+```
 
 ## Base de Dados Mockada
 O serviço utiliza uma lista estática de CPFs para simular negativações:
 
+```java
+private static final Set<String> CPFS_NEGATIVADOS = Set.of(
+    "18142226006",
+    "16470435068"
+);
 ```
 
 ### Lógica de Negócio
 - CPFs na lista mockada retornam `true` (negativado)
 - CPFs não listados retornam `false` (não negativado)
-- Caracteres não numéricos são removidos automaticamente
+- Processamento automático de caracteres não numéricos
 
-## Estrutura do Projeto
-```
-src/main/java/com/example/serasa/
-├── config/          # Configurações Kafka (Consumer/Producer)
-├── constants/       # Constantes (tópicos)
-├── dto/            # Data Transfer Objects
-└── service/        # Serviços de negócio e consumo Kafka
-```
+## Fluxo de Comunicação
+1. **Recebimento**: Consome CPF do tópico `verificar-serasa-request`
+2. **Processamento**: Verifica CPF na base mockada
+3. **Resposta**: Envia resultado automaticamente para `verificar-serasa-response`
+4. **Acknowledgment**: Confirma processamento manualmente
 
 ## Exemplo de Uso
 
 ### Request (CPF enviado no tópico)
-```
+```json
 "12345678901"
 ```
 
-### Response (retorno no tópico de resposta)
+### Response (retorno automático no tópico de resposta)
+```json
+"false"
 ```
+
+### Para CPF negativado
+```json
+"18142226006"
+```
+```json
 "true"
 ```
 
-## Configurações de Log
-O serviço registra:
-- Recebimento de consultas de CPF
-- Resultado das consultas
-- Logs do Apache Kafka em nível INFO
+## Configurações Kafka Específicas
+
+### Consumer
+- **Group ID**: `serasa-group`
+- **Auto Offset Reset**: `earliest`
+- **Enable Auto Commit**: `false` (acknowledgment manual)
+- **Ack Mode**: `MANUAL_IMMEDIATE`
+
+### Producer
+- **Retries**: 3
+- **Reply Template**: Configurado automaticamente
+
 
 ## Características Técnicas
-- **Comunicação Síncrona**: Utiliza padrão request-reply do Kafka
+- **Comunicação Síncrona**: Utiliza padrão request-reply do Kafka com @SendTo
 - **Tolerância a Falhas**: Configurado com retry de 3 tentativas
 - **Processamento**: Assíncrono através de listeners Kafka
 - **Acknowledgment**: Manual imediato para garantir processamento
+- **Serialização**: JSON via Jackson
+
+## Configurações de Log
+- Logs do Apache Kafka em nível INFO
+- Logs do Hibernate SQL em nível DEBUG
+- Logs customizados para consultas de CPF
 
 ## Integração
-Este microsserviço é consumido pelo **Microsserviço Pessoa** durante o processo de cadastro, fornecendo informações sobre a situação financeira da pessoa baseada no CPF.
+Este microsserviço é consumido pelo:
+- **Microsserviço Pessoa**: Durante o processo de cadastro para verificar situação financeira
+
