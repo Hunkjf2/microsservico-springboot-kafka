@@ -11,7 +11,7 @@ import static com.example.serasa.constants.TopicSerasa.*;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class SerasaComsumerService {
+public class SerasaConsumerService {
 
     private final SerasaService serasaService;
     private final SerializationService serializationService;

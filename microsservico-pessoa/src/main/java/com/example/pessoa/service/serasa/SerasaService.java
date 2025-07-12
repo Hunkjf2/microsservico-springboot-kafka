@@ -15,7 +15,7 @@ public class SerasaService {
     private final KafkaSincronoService kafkaSincronoService;
 
     public Boolean consultarSituacaoFinanceira(PessoaDto pessoaDto) {
-         boolean resultado = kafkaSincronoService.enviarEReceber(
+        Boolean resultado = kafkaSincronoService.enviarEReceber(
                  TOPIC_VERIFICAR_SERASA_REQUEST,
                  pessoaDto.cpf(),
                  Boolean.class);

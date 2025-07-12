@@ -30,8 +30,9 @@ public class KafkaConfig {
     private String autoOffsetReset;
 
     // Assincrona
-
-    // Producer para comunicação assíncrona
+    /**
+     * Configuração do producer
+     */
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         return new DefaultKafkaProducerFactory<>(Map.of(
@@ -39,11 +40,16 @@ public class KafkaConfig {
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.RETRIES_CONFIG, retriesConfig,
-                ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true
+                ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true,
+                ProducerConfig.ACKS_CONFIG, "all"
         ));
     }
 
-    // Template para comunicação assíncrona
+    /**
+     * Cria um KafkaTemplate para envio de mensagens assíncronas.
+     *
+     * @return Template configurado para envio de mensagens
+     */
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
@@ -51,29 +57,51 @@ public class KafkaConfig {
 
 
     // Sincrona
-    // Consumer para comunicação síncrona
+    /**
+     * Cria um ConsumerFactory para comunicação síncrona (request-reply).
+     * Configura o consumer com commit manual para controle preciso
+     * sobre quando as mensagens são confirmadas como processadas.
+     *
+     * @return ConsumerFactory configurado para replies
+     */
     @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
+    public ConsumerFactory<String, String> replyConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(Map.of(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                 ConsumerConfig.GROUP_ID_CONFIG, groupId,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset,
-                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true
+                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false
         ));
     }
 
-    // Container para reply topics
+    /**
+     * Cria um container listener para tópicos de resposta.
+     * Define o modo de confirmação (ACK) como MANUAL_IMMEDIATE.
+     * Neste modo, o offset é confirmado imediatamente após o processamento manual
+     * da mensagem, garantindo controle preciso sobre quando as mensagens são
+     * consideradas como processadas com sucesso.
+     *
+     * @return Container configurado para escutar respostas
+     */
     @Bean
     public ConcurrentMessageListenerContainer<String, String> replyContainer() {
         ContainerProperties containerProperties = new ContainerProperties(TOPIC_VERIFICAR_SERASA_RESPONSE);
-        return new ConcurrentMessageListenerContainer<>(consumerFactory(), containerProperties);
+        containerProperties.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+        return new ConcurrentMessageListenerContainer<>(replyConsumerFactory(), containerProperties);
     }
 
-    // Template para comunicação síncrona
+    /**
+     * Cria um ReplyingKafkaTemplate para comunicação síncrona request-reply.
+     * Este template permite enviar uma mensagem e aguardar uma resposta,
+     * útil para operações que requerem confirmação ou retorno de dados.
+     *
+     * @return Template configurado para comunicação síncrona
+     */
     @Bean
     public ReplyingKafkaTemplate<String, String, String> replyingKafkaTemplate() {
         return new ReplyingKafkaTemplate<>(producerFactory(), replyContainer());
     }
+
 }
