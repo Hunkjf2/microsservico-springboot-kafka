@@ -15,7 +15,7 @@ public class ObjectMapperConfig {
     public ObjectMapper objectMapper() {
         return new ObjectMapper()
                 .registerModule(new JavaTimeModule())
-                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false) // Datas em formato ISO-8601
                 .findAndRegisterModules();
     }
 

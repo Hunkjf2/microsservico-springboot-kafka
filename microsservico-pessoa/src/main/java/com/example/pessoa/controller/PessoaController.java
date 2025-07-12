@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pessoa")
-@Tag(name = "Pessoa", description = "Operações relacionadas a pessoas")
+@Tag(name = "Pessoa")
 public class PessoaController {
 
     private final PessoaService pessoaService;

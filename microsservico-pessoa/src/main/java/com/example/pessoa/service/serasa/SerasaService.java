@@ -15,10 +15,12 @@ public class SerasaService {
     private final KafkaSincronoService kafkaSincronoService;
 
     public Boolean consultarSituacaoFinanceira(PessoaDto pessoaDto) {
-         return kafkaSincronoService.sendAndReceive(
-                TOPIC_VERIFICAR_SERASA_REQUEST,
-                pessoaDto.cpf(),
-                Boolean.class
-        );
+         boolean resultado = kafkaSincronoService.enviarEReceber(
+                 TOPIC_VERIFICAR_SERASA_REQUEST,
+                 pessoaDto.cpf(),
+                 Boolean.class);
+        log.info("Situação financeira consultada para CPF {}: {}", pessoaDto.cpf(), resultado);
+         return resultado;
+
     }
 }

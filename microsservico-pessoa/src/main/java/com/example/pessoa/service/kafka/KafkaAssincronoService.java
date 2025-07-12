@@ -13,7 +13,7 @@ public class KafkaAssincronoService {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final KafkaSerializationService serializationService;
 
-    public void publicarMensagem(String topic, Object payload) {
+    public void enviar(String topic, Object payload) {
         String stringJson = serializationService.serialize(payload);
         kafkaTemplate.send(topic, stringJson);
         log.info("Mensagem enviada para tópico: {}", topic);

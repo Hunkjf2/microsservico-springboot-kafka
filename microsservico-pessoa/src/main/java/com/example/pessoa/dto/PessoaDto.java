@@ -14,7 +14,6 @@ public record PessoaDto(
 
         @NotBlank(message = "CPF é obrigatório")
         @CPF(message = "CPF deve ter formato válido")
-        @Size(max = 11, message = "CPF deve ter 11 caracteres")
         String cpf,
 
         @NotNull(message = "Data de Nascimento é obrigatória")

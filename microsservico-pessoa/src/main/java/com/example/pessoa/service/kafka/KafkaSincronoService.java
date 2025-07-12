@@ -1,6 +1,6 @@
 package com.example.pessoa.service.kafka;
 
-import com.example.pessoa.config.exception.ExceptionHandler;
+import com.example.pessoa.config.exception.ProcessingException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class KafkaSincronoService {
     private static final Duration TIMEOUT = Duration.ofSeconds(3);
 
     @CircuitBreaker(name = "microsservico-serasa", fallbackMethod = "fallbackEnvio")
-    public <T> T sendAndReceive(String topic, Object payload, Class<T> responseType) {
+    public <T> T enviarEReceber(String topic, Object payload, Class<T> responseType) {
         try {
             String stringJson = serializationService.serialize(payload);
 
@@ -35,7 +35,7 @@ public class KafkaSincronoService {
 
             return serializationService.deserialize(response.getPayload(), responseType);
         } catch (Exception e) {
-            throw ExceptionHandler.handleException(e);
+            throw new ProcessingException("Falha na comunicação", e);
         }
     }
 
