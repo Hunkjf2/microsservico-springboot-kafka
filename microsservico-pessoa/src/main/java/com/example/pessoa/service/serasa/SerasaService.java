@@ -20,7 +20,7 @@ public class SerasaService {
                  pessoaDto.cpf(),
                  Boolean.class);
         log.info("Situação financeira consultada para CPF {}: {}", pessoaDto.cpf(), resultado);
-         return resultado;
+        return resultado;
 
     }
 }

@@ -6,7 +6,7 @@ spring:
     producer:
       retries: 3
     consumer:
-      group-id: pessoa-reply-group
+      group-id: pessoa-group
       auto-offset-reset: earliest
 
   datasource:

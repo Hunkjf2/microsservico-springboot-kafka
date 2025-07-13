@@ -39,9 +39,8 @@ public class KafkaConfig {
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
-                ProducerConfig.RETRIES_CONFIG, retriesConfig,
-                ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true,
-                ProducerConfig.ACKS_CONFIG, "all"
+                ProducerConfig.RETRIES_CONFIG, retriesConfig, // Para reenviar mensagens que falharam
+                ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true // Para evitar duplicação de mensagens
         ));
     }
 
@@ -71,8 +70,8 @@ public class KafkaConfig {
                 ConsumerConfig.GROUP_ID_CONFIG, groupId,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
-                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset,
-                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false
+                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset, // Para garantir que as mensagens sejam lidas desde o início se não houver marcarção (offset) anterior
+                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false // Desabilita o commit automático para permitir controle manual do offset
         ));
     }
 
@@ -94,8 +93,7 @@ public class KafkaConfig {
 
     /**
      * Cria um ReplyingKafkaTemplate para comunicação síncrona request-reply.
-     * Este template permite enviar uma mensagem e aguardar uma resposta,
-     * útil para operações que requerem confirmação ou retorno de dados.
+     * Este template permite enviar uma mensagem e aguardar uma resposta.
      *
      * @return Template configurado para comunicação síncrona
      */
