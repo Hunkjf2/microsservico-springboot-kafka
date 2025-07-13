@@ -8,6 +8,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import java.time.Duration;
+import java.util.concurrent.TimeoutException;
 
 @Service
 @RequiredArgsConstructor

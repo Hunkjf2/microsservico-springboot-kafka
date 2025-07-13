@@ -26,9 +26,11 @@ public class SerasaService {
     }
 
     @SuppressWarnings("unused")
-    private <T> T fallbackEnvio(String topic, Object payload, Class<T> responseType, Throwable ex) {
-        log.warn("Fallback ativado para tópico '{}'. Erro: {}", topic, ex.getMessage());
-        return null;
+    public Boolean fallbackConsultaSerasa(PessoaDto pessoaDto, Exception ex) {
+        log.warn("Fallback ativado para consulta Serasa. CPF: {}. Erro: {}",
+                pessoaDto.cpf(), ex.getMessage());
+
+        return false;
     }
 
 }
