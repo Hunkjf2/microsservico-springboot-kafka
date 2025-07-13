@@ -1,18 +1,17 @@
 package com.example.log.service;
 
+import com.example.log.config.exception.ProcessingException;
 import com.example.log.dto.LogEventDto;
 import com.example.log.dto.PessoaDto;
 import com.example.log.model.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import static com.example.log.constants.TopicLog.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class LogConsumerService {
     
     private final LogService logService;
@@ -37,9 +36,8 @@ public class LogConsumerService {
                     .build();
 
             logService.cadastrarLog(log);
-
         } catch (Exception e) {
-            log.error("Erro ao processar mensagem de cadastro de log: {}", e.getMessage(), e);
+            throw new ProcessingException("Erro ao processar mensagem de cadastro de log: {}", e);
         }
 
     }
