@@ -1,4 +1,4 @@
-package com.example.log.service;
+package com.example.log.service.log;
 
 import com.example.log.model.Log;
 import com.example.log.repository.LogRepository;

@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 public class KafkaAssincronoService {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final KafkaSerializationService serializationService;
+    private final KafkaSerializacaoService kafkaSerializacaoService;
 
     public void enviar(String topic, Object payload) {
         try {
-            String stringJson = serializationService.serialize(payload);
+            String stringJson = kafkaSerializacaoService.serialize(payload);
             kafkaTemplate.send(topic, stringJson);
             log.info("Mensagem enviada para tópico: {} Mensagem: {} ", topic, stringJson);
         } catch (Exception e) {

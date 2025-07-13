@@ -2,6 +2,7 @@ package com.example.pessoa.service.serasa;
 
 import com.example.pessoa.dto.PessoaDto;
 import com.example.pessoa.service.kafka.KafkaSincronoService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ public class SerasaService {
 
     private final KafkaSincronoService kafkaSincronoService;
 
+    @CircuitBreaker(name = "microsservico-serasa", fallbackMethod = "fallbackEnvio")
     public Boolean consultarSituacaoFinanceira(PessoaDto pessoaDto) {
         Boolean resultado = kafkaSincronoService.enviarEReceber(
                  TOPIC_VERIFICAR_SERASA_REQUEST,
@@ -21,6 +23,12 @@ public class SerasaService {
                  Boolean.class);
         log.info("Situação financeira consultada para CPF {}: {}", pessoaDto.cpf(), resultado);
         return resultado;
-
     }
+
+    @SuppressWarnings("unused")
+    private <T> T fallbackEnvio(String topic, Object payload, Class<T> responseType, Throwable ex) {
+        log.warn("Fallback ativado para tópico '{}'. Erro: {}", topic, ex.getMessage());
+        return null;
+    }
+
 }

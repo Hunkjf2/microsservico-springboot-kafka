@@ -1,4 +1,4 @@
-package com.example.serasa.service;
+package com.example.serasa.service.kafka;
 
 import com.example.serasa.config.exception.SerasaMessageException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SerializationService {
+public class KafkaSerializacaoService {
 
     private final ObjectMapper objectMapper;
 
@@ -15,7 +15,7 @@ public class SerializationService {
         try {
             return objectMapper.readValue(payload, targetType);
         } catch (Exception e) {
-            throw new SerasaMessageException("Falha na deserialização", e);
+            throw new SerasaMessageException("Falha na deserialização:", e);
         }
     }
 

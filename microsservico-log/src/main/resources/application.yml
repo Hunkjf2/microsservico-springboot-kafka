@@ -17,11 +17,10 @@ spring:
         default_schema: log_db
 
   kafka:
-    bootstrap-servers: localhost:9092  # Servidor Kafka
+    bootstrap-servers: localhost:9092
     consumer:
-      group-id: log-service-group  # Grupo do consumer
+      group-id: log-service-group
       auto-offset-reset: earliest
-      enable-auto-commit: true
 
 server:
   port: 8060
@@ -29,6 +28,6 @@ server:
 logging:
   level:
     org.apache.kafka: INFO
-    org.springframework.kafka: DEBUG  # Log detalhado para Spring Kafka
+    org.springframework.kafka: DEBUG
     org.hibernate.orm.connections.pooling: ERROR
-    org.hibernate.SQL: DEBUG  # Log das queries SQL
+    org.hibernate.SQL: DEBUG

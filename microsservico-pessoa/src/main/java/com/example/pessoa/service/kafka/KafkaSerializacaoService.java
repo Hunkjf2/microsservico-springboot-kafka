@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class KafkaSerializationService {
+public class KafkaSerializacaoService {
 
     private final ObjectMapper objectMapper;
 
