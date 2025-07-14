@@ -2,7 +2,7 @@
 
 ## 📋 Introdução
 
-Este projeto demonstra uma arquitetura de microsserviços utilizando **Spring Boot** e **Apache Kafka** para comunicação entre serviços. O sistema implementa padrões de mensageria tanto síncronos quanto assíncronos, oferecendo uma solução robusta e escalável para gerenciamento de dados de pessoas com integração a serviços externos.
+Este projeto demonstra uma arquitetura de microsserviços utilizando **Spring Boot** e **Apache Kafka** para comunicação entre serviços. O sistema implementa padrões de mensageria tanto síncronos quanto assíncronos.
 
 ### 🏗️ Arquitetura do Sistema
 
@@ -45,14 +45,3 @@ graph LR
     B --> E[PostgreSQL]
     D --> F[PostgreSQL]
 ```
-
-### 🎯 Características do Projeto
-
-- **Alta disponibilidade** com Circuit Breaker
-- **Auditoria completa** de operações
-- **Validações robustas** de dados
-- **Tratamento de erros** padronizado
-- **Documentação automática** via Swagger
-- **Monitoramento** através de logs estruturados
-
-Este projeto serve como exemplo prático de implementação de microsserviços modernos, demonstrando boas práticas de desenvolvimento, padrões de integração e estratégias de resiliência em sistemas distribuídos.
