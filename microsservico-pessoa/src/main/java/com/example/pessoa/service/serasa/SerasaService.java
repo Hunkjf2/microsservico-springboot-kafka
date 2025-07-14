@@ -1,6 +1,5 @@
 package com.example.pessoa.service.serasa;
 
-import com.example.pessoa.dto.PessoaDto;
 import com.example.pessoa.service.kafka.KafkaSincronoService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
