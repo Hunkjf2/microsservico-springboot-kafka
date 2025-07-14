@@ -15,7 +15,7 @@ public class SerasaService {
 
     private final KafkaSincronoService kafkaSincronoService;
 
-    @CircuitBreaker(name = "microsservico-serasa", fallbackMethod = "fallbackEnvio")
+    @CircuitBreaker(name = "microsservico-serasa", fallbackMethod = "fallbackConsultarSituacaoFinanceira")
     public Boolean consultarSituacaoFinanceira(String cpf) {
         String resultado = kafkaSincronoService.enviarEReceber(
                  TOPIC_VERIFICAR_SERASA_REQUEST,
@@ -26,7 +26,8 @@ public class SerasaService {
     }
 
     @SuppressWarnings("unused")
-    public Boolean fallbackEnvio(PessoaDto pessoaDto, Exception ex) {
+    public Boolean fallbackConsultarSituacaoFinanceira(String cpf, Exception ex) {
+        log.warn("Fallback ativado para consulta do CPF {}: {}", cpf, ex.getMessage());
         return null;
     }
 
