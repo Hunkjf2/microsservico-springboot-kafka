@@ -26,11 +26,8 @@ public class SerasaService {
     }
 
     @SuppressWarnings("unused")
-    public Boolean fallbackConsultaSerasa(PessoaDto pessoaDto, Exception ex) {
-        log.warn("Fallback ativado para consulta Serasa. CPF: {}. Erro: {}",
-                pessoaDto.cpf(), ex.getMessage());
-
-        return false;
+    public Boolean fallbackEnvio(PessoaDto pessoaDto, Exception ex) {
+        return null;
     }
 
 }

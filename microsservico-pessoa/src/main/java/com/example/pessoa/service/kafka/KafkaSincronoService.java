@@ -8,7 +8,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import java.time.Duration;
-import java.util.concurrent.TimeoutException;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class KafkaSincronoService {
 
             return kafkaSerializacaoService.deserialize(response.getPayload(), responseType);
         } catch (Exception e) {
-            throw new ProcessingException("Falha na comunicação", e);
+            throw new ProcessingException("Falha no envio e rebimento da mensagem:", e);
         }
     }
 
