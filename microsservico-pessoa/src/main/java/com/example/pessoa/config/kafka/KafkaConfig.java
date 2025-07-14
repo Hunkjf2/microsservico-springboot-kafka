@@ -29,6 +29,7 @@ public class KafkaConfig {
     @Value("${spring.kafka.consumer.auto-offset-reset}")
     private String autoOffsetReset;
 
+
     // Assincrona
     /**
      * Configuração do producer
@@ -40,7 +41,7 @@ public class KafkaConfig {
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.RETRIES_CONFIG, retriesConfig, // Para reenviar mensagens que falharam
-                ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true // Para evitar duplicação de mensagens
+                ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, false // Para evitar duplicação de mensagens
         ));
     }
 
@@ -70,13 +71,12 @@ public class KafkaConfig {
                 ConsumerConfig.GROUP_ID_CONFIG, groupId,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
-                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset, // Para garantir que as mensagens sejam lidas desde o início se não houver marcarção (offset) anterior
-                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false // Desabilita o commit automático para permitir controle manual do offset
+                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset, // Para garantir que as mensagens sejam lidas desde o início se não houver marcarção (offset)
+                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false // Desabilita a confirmação de processamento automático
         ));
     }
 
     /**
-     * Cria um container listener para tópicos de resposta.
      * Define o modo de confirmação (ACK) como MANUAL_IMMEDIATE.
      * Neste modo, o offset é confirmado imediatamente após o processamento manual
      * da mensagem, garantindo controle preciso sobre quando as mensagens são
