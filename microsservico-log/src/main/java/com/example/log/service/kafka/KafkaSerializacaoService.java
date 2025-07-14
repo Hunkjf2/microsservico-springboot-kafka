@@ -13,7 +13,7 @@ public class KafkaSerializacaoService {
 
     public <T> T deserialize(String payload, Class<T> targetType) {
         try {
-            return objectMapper.readValue(payload, targetType);
+            return objectMapper.convertValue(payload, targetType);
         } catch (Exception e) {
             throw new ProcessingException("Falha na deserialização", e);
         }

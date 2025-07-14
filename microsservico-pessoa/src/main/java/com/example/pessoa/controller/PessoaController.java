@@ -1,6 +1,7 @@
 package com.example.pessoa.controller;
 
 import com.example.pessoa.dto.PessoaDto;
+import com.example.pessoa.dto.SuccessResponse;
 import com.example.pessoa.service.pessoa.PessoaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static com.example.pessoa.constants.global.MenssagemSistema.SUCESSO;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,9 +38,9 @@ public class PessoaController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Deletar pessoa")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse> deletar(@PathVariable Long id) {
         pessoaService.deletarPessoa(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(SuccessResponse.ok(SUCESSO));
     }
 
 }
