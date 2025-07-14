@@ -32,7 +32,7 @@ public class PessoaService {
     @Transactional
     public Pessoa cadastrar(PessoaDto pessoaDto) {
 //        validarCpfUnico(pessoaDto.cpf());
-        Boolean negativado = serasaService.consultarSituacaoFinanceira(pessoaDto);
+        Boolean negativado = serasaService.consultarSituacaoFinanceira(pessoaDto.cpf());
 
         Pessoa pessoa = pessoaMapper.toEntity(pessoaDto);
         pessoa.setNegativado(negativado);

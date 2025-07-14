@@ -19,12 +19,4 @@ public class KafkaSerializacaoService {
         }
     }
 
-    public <T> T deserialize(Object payload, Class<T> targetType) {
-        try {
-            return objectMapper.convertValue(payload, targetType);
-        } catch (Exception e) {
-            throw new ProcessingException("Falha na deserialização", e);
-        }
-    }
-
 }

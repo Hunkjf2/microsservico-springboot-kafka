@@ -14,23 +14,20 @@ import java.time.Duration;
 public class KafkaSincronoService {
 
     private final ReplyingKafkaTemplate<String, String, String> replyingKafkaTemplate;
-    private final KafkaSerializacaoService kafkaSerializacaoService;
     private static final Duration TIMEOUT = Duration.ofSeconds(3);
 
-
-    public <T> T enviarEReceber(String topic, Object payload, Class<T> responseType) {
+    public String enviarEReceber(String topic, String cpf) {
         try {
-            String stringJson = kafkaSerializacaoService.serialize(payload);
 
             Message<String> message = MessageBuilder
-                    .withPayload(stringJson)
+                    .withPayload(cpf)
                     .setHeader(KafkaHeaders.TOPIC, topic)
                     .build();
 
             var future = replyingKafkaTemplate.sendAndReceive(message, TIMEOUT);
             var response = future.get();
 
-            return kafkaSerializacaoService.deserialize(response.getPayload(), responseType);
+            return (String) response.getPayload();
         } catch (Exception e) {
             throw new ProcessingException("Falha no envio e rebimento da mensagem:", e);
         }

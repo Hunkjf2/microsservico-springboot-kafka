@@ -1,7 +1,6 @@
-package com.example.serasa.service.serasa;
+package com.example.serasa.service;
 
 import com.example.serasa.config.exception.SerasaMessageException;
-import com.example.serasa.service.kafka.KafkaSerializacaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,13 +15,11 @@ import static com.example.serasa.constants.TopicSerasa.*;
 public class SerasaConsumerService {
 
     private final SerasaService serasaService;
-    private final KafkaSerializacaoService kafkaSerializacaoService;
 
     @KafkaListener(topics = TOPIC_VERIFICAR_SERASA_REQUEST)
     @SendTo(TOPIC_VERIFICAR_SERASA_RESPONSE)
-    public String consultarCpf(String mensagem, Acknowledgment acknowledgment) {
+    public String consultarCpf(String cpf, Acknowledgment acknowledgment) {
         try {
-            String cpf = kafkaSerializacaoService.deserialize(mensagem, String.class);
 
             boolean resultado = serasaService.consultarCpfSerasa(cpf);
 

@@ -1,4 +1,4 @@
-package com.example.serasa.service.serasa;
+package com.example.serasa.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
